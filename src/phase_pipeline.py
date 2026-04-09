@@ -94,7 +94,8 @@ def ensure_binary_groups(df: pd.DataFrame) -> pd.DataFrame:
     """Force usable Group A vs Group B labels from available sample metadata."""
     out = df.copy()
 
-    if out["group"].nunique(dropna=True) >= 2:
+    unique_groups = set(out["group"].dropna().astype(str).unique())
+    if unique_groups.issubset({"Group A", "Group B"}) and len(unique_groups) >= 2:
         return out
 
     if "compound" in out.columns and out["compound"].nunique(dropna=True) >= 2:

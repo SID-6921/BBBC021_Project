@@ -1,0 +1,15 @@
+{
+  "batches_tested": [
+    "Week1_22123",
+    "Week1_22141",
+    "Week2_24121"
+  ],
+  "target_images_per_batch": 50,
+  "total_images_processed": 450,
+  "configs_tested": [
+    "sensitive",
+    "default",
+    "conservative"
+  ],
+  "best_rf_accuracy_config": "sensitive"
+}

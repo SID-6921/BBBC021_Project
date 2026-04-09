@@ -139,3 +139,26 @@ This creates:
   - `feature_importance.csv`
   - `pca_clusters.csv`
   - `summary.md`
+
+## Robustness Pipeline
+
+Run the multi-batch robustness analysis:
+
+```powershell
+python src/robustness_pipeline.py
+```
+
+This downloads three BBBC021 batches if needed, evaluates multiple detection parameter sets, and creates:
+
+- `final_figures/`
+  - `figure6_batch_robustness.png`
+  - `figure7_threshold_sensitivity.png`
+  - `figure8_robustness_classification.png`
+- `final_tables/`
+  - `robustness_feature_table.csv`
+- `results_summary/`
+  - `robustness_batch_summary.csv`
+  - `robustness_classification.csv`
+  - `robustness_config_summary.csv`
+  - `robustness_summary.json`
+  - `robustness_summary.md`
