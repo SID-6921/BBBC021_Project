@@ -8,10 +8,15 @@ import pandas as pd
 
 METRIC_COLUMNS = [
     "spot_count",
-    "avg_brightness",
+    "mean_intensity",
     "total_intensity",
+    "intensity_variance",
     "area_covered_px",
     "area_covered_ratio",
+    "density_spots_per_10k_px",
+    "spot_area_mean",
+    "spot_area_std",
+    "spot_area_median",
 ]
 
 

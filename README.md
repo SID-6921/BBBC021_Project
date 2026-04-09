@@ -115,3 +115,27 @@ For sharing and verification in GitHub, packaged artifacts are copied to:
 - BBBC021 images are distributed as multiple plate ZIPs; the exploration notebook starts with one ZIP for quick testing and can be extended to more ZIP URLs.
 - Raw images are excluded from git via `.gitignore` to keep repo size manageable.
 - You can adjust detection parameters in `src/detect.py`.
+
+## Phase Pipeline (Refined Detection + Modeling)
+
+Run the end-to-end refined pipeline:
+
+```powershell
+python src/phase_pipeline.py
+```
+
+This creates:
+
+- `final_figures/`
+  - Figure 1: pipeline workflow
+  - Figure 2: detection overlays
+  - Figure 3: feature comparison boxplots
+  - Figure 4: ROC + feature importance
+  - Figure 5: PCA + clustering
+- `final_tables/`
+  - `image_feature_table.csv`
+- `results_summary/`
+  - `classification_metrics.json`
+  - `feature_importance.csv`
+  - `pca_clusters.csv`
+  - `summary.md`
