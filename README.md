@@ -182,3 +182,4 @@ This creates:
   - `deep_learning_metrics.json`
   - `model_comparison_final.csv`
   - `manuscript_draft.md`
+  - `manuscript_mdpi_submission.md`
