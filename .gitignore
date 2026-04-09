@@ -18,6 +18,8 @@ venv/
 # Keep folder structure but avoid committing raw dataset
 /data/raw/images/*
 !/data/raw/images/.gitkeep
+/data/raw/metadata/*
+!/data/raw/metadata/.gitkeep
 
 # Processed outputs and generated artifacts
 /data/processed/resized/*

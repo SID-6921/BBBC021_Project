@@ -104,7 +104,14 @@ After running `03_detection.ipynb` and `04_analysis.ipynb`, check:
 - Full metrics: `outputs/metrics/image_metrics.csv`
 - Group plots: `outputs/plots/*.png`
 
+For sharing and verification in GitHub, packaged artifacts are copied to:
+
+- `outputs/deliverable/overlays/`
+- `outputs/deliverable/metrics/`
+- `outputs/deliverable/plots/`
+
 ## Notes
 
+- BBBC021 images are distributed as multiple plate ZIPs; the exploration notebook starts with one ZIP for quick testing and can be extended to more ZIP URLs.
 - Raw images are excluded from git via `.gitignore` to keep repo size manageable.
 - You can adjust detection parameters in `src/detect.py`.

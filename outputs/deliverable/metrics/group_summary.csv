@@ -1,0 +1,4 @@
+,spot_count,spot_count,spot_count,avg_brightness,avg_brightness,avg_brightness,total_intensity,total_intensity,total_intensity,area_covered_px,area_covered_px,area_covered_px,area_covered_ratio,area_covered_ratio,area_covered_ratio
+,mean,std,median,mean,std,median,mean,std,median,mean,std,median,mean,std,median
+group,,,,,,,,,,,,,,,
+Group B,56.766666666666666,26.511784410780013,61.0,61.24402058919271,12.685489428713858,60.95988082885742,16054752.533333333,3325424.9408007655,15980267.0,31499.9,13159.38613323009,31242.5,0.12016258239746094,0.050199074299736364,0.11918067932128906

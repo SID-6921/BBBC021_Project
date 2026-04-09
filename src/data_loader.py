@@ -59,14 +59,53 @@ def load_multichannel_image(
     images_dir = Path(images_dir)
     cols = list(channel_columns) if channel_columns is not None else [c for c in row.index if "filename" in c.lower()]
 
+    def _build_candidates(file_col: str, file_value: str) -> list[Path]:
+        file_name = Path(file_value).name
+        candidates: list[Path] = []
+
+        # Direct filename path from metadata value.
+        candidates.append(images_dir / file_value)
+
+        # Try matching paired pathname column, e.g. Image_PathName_DAPI for Image_FileName_DAPI.
+        path_col = file_col.replace("FileName", "PathName")
+        if path_col in row and not pd.isna(row[path_col]):
+            raw_path = str(row[path_col]).replace("\\", "/")
+            parts = [p for p in raw_path.split("/") if p]
+            # Keep only tail parts from the first BBBC021 marker onward.
+            start_idx = 0
+            for i, p in enumerate(parts):
+                if p.lower() == "bbbc021":
+                    start_idx = i + 1
+                    break
+            rel_parts = parts[start_idx:]
+            if rel_parts:
+                candidates.append(images_dir.joinpath(*rel_parts, file_name))
+
+        # Final fallback: search by basename recursively.
+        candidates.append(images_dir / file_name)
+        return candidates
+
     channels: list[np.ndarray] = []
     for col in cols:
         if col not in row or pd.isna(row[col]):
             continue
-        img_path = images_dir / str(row[col])
-        if not img_path.exists():
+        file_value = str(row[col])
+        chosen_path: Path | None = None
+
+        for candidate in _build_candidates(col, file_value):
+            if candidate.exists():
+                chosen_path = candidate
+                break
+
+        if chosen_path is None:
+            matches = list(images_dir.rglob(Path(file_value).name))
+            if matches:
+                chosen_path = matches[0]
+
+        if chosen_path is None:
             continue
-        img = cv2.imread(str(img_path), cv2.IMREAD_GRAYSCALE)
+
+        img = cv2.imread(str(chosen_path), cv2.IMREAD_GRAYSCALE)
         if img is None:
             continue
         channels.append(img)
