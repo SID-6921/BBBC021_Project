@@ -6,3 +6,4 @@ scikit-image>=0.22
 scikit-learn>=1.4
 seaborn>=0.13
 jupyter>=1.0
+torch>=2.2

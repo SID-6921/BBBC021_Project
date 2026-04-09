@@ -162,3 +162,23 @@ This downloads three BBBC021 batches if needed, evaluates multiple detection par
   - `robustness_config_summary.csv`
   - `robustness_summary.json`
   - `robustness_summary.md`
+
+## Deep Learning Comparison
+
+Run the CNN comparison pipeline:
+
+```powershell
+python src/deep_learning_pipeline.py
+```
+
+This creates:
+
+- `final_figures/`
+  - `figure9_deep_learning_roc.png`
+  - `figure9_deep_learning_training.png`
+- `final_tables/`
+  - `deep_learning_predictions.csv`
+- `results_summary/`
+  - `deep_learning_metrics.json`
+  - `model_comparison_final.csv`
+  - `manuscript_draft.md`
