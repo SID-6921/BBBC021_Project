@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+.venv/
+venv/
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data artifacts
+*.zip
+*.tmp
+
+# Keep folder structure but avoid committing raw dataset
+/data/raw/images/*
+!/data/raw/images/.gitkeep
+
+# Processed outputs and generated artifacts
+/data/processed/resized/*
+!/data/processed/resized/.gitkeep
+/data/processed/normalized/*
+!/data/processed/normalized/.gitkeep
+/data/processed/cleaned/*
+!/data/processed/cleaned/.gitkeep
+/outputs/detections/*
+!/outputs/detections/.gitkeep
+/outputs/overlays/*
+!/outputs/overlays/.gitkeep
+/outputs/metrics/*
+!/outputs/metrics/.gitkeep
+/outputs/plots/*
+!/outputs/plots/.gitkeep
+/models/checkpoints/*
+!/models/checkpoints/.gitkeep
