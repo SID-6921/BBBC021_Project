@@ -1,0 +1,7 @@
+ablation,n_removed,test_auc,removed_features,auc_drop_vs_base
+none,0,0.9398997493734336,,
+remove_top_1,1,0.9336842105263159,mean_intensity,0.006215538847117674
+remove_top_2,2,0.9071679197994988,"mean_intensity,total_intensity",0.03273182957393472
+remove_top_3,3,0.9030576441102756,"mean_intensity,total_intensity,spot_count",0.03684210526315801
+remove_top_5,5,0.8475689223057643,"mean_intensity,total_intensity,spot_count,density_spots_per_10k_px,area_covered_ratio",0.09233082706766926
+remove_top_8,8,0.7188972431077694,"mean_intensity,total_intensity,spot_count,density_spots_per_10k_px,area_covered_ratio,spot_area_std,intensity_variance,spot_area_q25",0.2210025062656642

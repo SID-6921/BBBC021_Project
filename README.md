@@ -183,3 +183,34 @@ This creates:
   - `model_comparison_final.csv`
   - `manuscript_draft.md`
   - `manuscript_mdpi_submission.md`
+
+## Full-Dataset Advanced Analysis (1500+ Images)
+
+Run the full advanced evaluation pipeline:
+
+```powershell
+python src/full_dataset_advanced_pipeline.py
+```
+
+This run expands to at least 1500 images and adds:
+
+- confusion matrices for RF, CNN, ResNet-18
+- per-class ROC AUC reporting
+- DeLong statistical tests (CNN vs RF, ResNet vs RF)
+- PCA batch effect plots before and after batch-normalization
+- feature ablation study
+- calibration curves + expected calibration error (ECE)
+- ResNet-18 transfer learning baseline
+- biological validation of top features against compound metadata
+- computational cost comparison table
+- nested cross-validation diagnostics on training data
+
+Generated outputs include:
+
+- `final_tables/full_dataset_features_1500plus.csv`
+- `results_summary/advanced_model_metrics.csv`
+- `results_summary/advanced_delong_tests.json`
+- `results_summary/advanced_nested_cv.csv`
+- `results_summary/advanced_biological_validation.csv`
+- `results_summary/advanced_computational_cost.csv`
+- `results_summary/advanced_calibration_ece.csv`

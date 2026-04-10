@@ -1,0 +1,8 @@
+{
+  "n_samples": 1600,
+  "n_train": 1088,
+  "n_val": 192,
+  "n_test": 320,
+  "metrics_file": "results_summary/advanced_model_metrics.csv",
+  "delong_file": "results_summary/advanced_delong_tests.json"
+}
