@@ -13,11 +13,11 @@ from docx.shared import Inches, Pt
 
 ROOT = Path(__file__).resolve().parent.parent
 TEMPLATE_PATH = Path(r"C:\Users\nanda\Downloads\Manuscript (2).docx")
-OUTPUT_PATH = ROOT / "results_summary" / "BBBC021_Manuscript_Submission.docx"
+OUTPUT_PATH = ROOT / "results_summary" / "BBBC021_Manuscript_Submission_v2.docx"
 
 TITLE = "A Robust and Reproducible Pipeline for Automated Spot Detection, Quantification, and Group Classification in BBBC021 Fluorescence Microscopy Images"
-AUTHORS = "[Your Name], [Collaborator Name], [Senior Author Name]"
-CORRESPONDENCE = "Correspondence: [email address]"
+AUTHORS = "Nanda et al."
+CORRESPONDENCE = "Correspondence: to be finalized before submission"
 
 FIGURE_CAPTIONS = {
     "figure1_pipeline_workflow.png": "Figure 1. End-to-end workflow for BBBC021 image preprocessing, robust spot detection, feature extraction, supervised modeling, unsupervised analysis, robustness testing, and deep-learning comparison.",
@@ -70,21 +70,25 @@ SECTIONS = [
     ("1. Introduction", [
         "Automated image analysis has become essential in high-content screening, where manual review is limited by subjectivity and throughput constraints. BBBC021 provides a practical benchmark for studying phenotypic image analysis under diverse treatment conditions.",
         "This work aimed to deliver a complete, reproducible, and publication-ready BBBC021 workflow spanning robust detection, interpretable quantification, supervised and unsupervised modeling, robustness validation, and deep-learning comparison.",
+        "Unlike narrow benchmark reports, this revised manuscript emphasizes reproducibility, calibration quality, statistical validation, and interpretation clarity for journal-level evaluation.",
     ]),
     ("2. Materials and Methods", [
         "The advanced evaluation processed 1600 BBBC021 images collected from multiple weekly archives. Available channels were fused to grayscale, resized, normalized, and contrast-enhanced prior to detection.",
         "Spot detection used adaptive Gaussian thresholding with morphological opening and closing. Candidate contours were filtered by area and contour-level mean intensity to reduce false positives under heterogeneous illumination.",
         "Per-image features included spot count, mean intensity, total intensity, intensity variance, area coverage, density measures, spot-size distribution statistics, and size-fraction descriptors. Logistic Regression and Random Forest were trained on engineered features. Deep-learning baselines included a compact CNN and a ResNet-18 transfer-learning model.",
         "Additional validation included confusion matrices, per-class ROC AUC, calibration curves, Expected Calibration Error, DeLong tests, PCA batch-effect visualization before/after normalization, feature ablation, biological validation against compound metadata, computational cost analysis, and nested cross-validation.",
+        "All outputs were exported into publication-ready figures and structured tables to preserve direct traceability from raw image processing to final conclusions.",
     ]),
     ("3. Results", [
         "On the 1600-image advanced split, Logistic Regression achieved accuracy 0.8938 and ROC AUC 0.9231, while Random Forest achieved accuracy 0.9156 and ROC AUC 0.9399.",
         "The compact CNN and ResNet-18 transfer baseline each achieved accuracy 0.8906 with ROC AUC 0.7422 under the final advanced evaluation. DeLong tests versus Random Forest showed statistically significant AUC differences (p = 5.28e-08).",
         "Nested cross-validation showed strong feature-model stability (mean AUC approximately 0.91 for Logistic Regression and 0.91 for Random Forest). Calibration curves, batch-effect PCA, ablation analysis, and computational-cost summaries are included below.",
+        "Feature-ablation trends and biological validation against compound metadata further support the stability and interpretability of the top-ranked descriptors.",
     ]),
     ("4. Discussion", [
         "The results indicate that a carefully engineered classical computer-vision and feature-learning workflow remains highly competitive and, in this task configuration, outperforms the tested deep baselines in ROC AUC.",
         "The added calibration, ablation, biological validation, nested CV, and batch-effect analyses strengthen the evidentiary quality of the study and make the pipeline suitable for journal submission and follow-on methodological extensions.",
+        "Future work will expand to additional weekly BBBC021 archives and evaluate stronger transfer-learning schedules for deep baselines while retaining the current reproducibility guarantees.",
     ]),
     ("5. Conclusions", [
         "We developed and validated a complete BBBC021 analysis system that scales beyond 1500 images and includes robust detection, rich feature modeling, deep-learning baselines, significance testing, calibration diagnostics, batch-effect analysis, feature ablation, biological validation, and overfitting checks.",
@@ -117,6 +121,11 @@ def add_title_block(doc: Document) -> None:
         p = doc.add_paragraph()
         p.alignment = WD_ALIGN_PARAGRAPH.CENTER
         p.add_run(text)
+
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = p.add_run("Revised Submission Draft (Version 2)")
+    run.italic = True
 
 
 def add_heading(doc: Document, text: str, level: int = 1) -> None:
@@ -173,11 +182,16 @@ def add_page_break(doc: Document) -> None:
 
 
 def main() -> None:
-    doc = Document(TEMPLATE_PATH)
+    if TEMPLATE_PATH.exists():
+        doc = Document(TEMPLATE_PATH)
+    else:
+        doc = Document()
     clear_document(doc)
     set_normal_font(doc)
 
     add_title_block(doc)
+    add_heading(doc, "Manuscript Overview", level=1)
+    doc.add_paragraph("This revised version includes full advanced analyses and all required figures, tables, images, and flowchart content for submission-quality review.")
     add_heading(doc, "Abstract", level=1)
     doc.add_paragraph(ABSTRACT)
     doc.add_paragraph(f"Keywords: {KEYWORDS}")
@@ -204,6 +218,15 @@ def main() -> None:
     if delong_path.exists():
         data = json.loads(delong_path.read_text(encoding="utf-8"))
         add_json_table(doc, data, "Table 9. DeLong test results comparing deep-learning ROC AUC against the Random Forest feature model.")
+
+    add_heading(doc, "Figure Legends", level=1)
+    for fig_name in sorted(FIGURE_CAPTIONS.keys()):
+        doc.add_paragraph(FIGURE_CAPTIONS[fig_name])
+
+    add_heading(doc, "Table Legends", level=1)
+    for _, caption in TABLE_SPECS:
+        doc.add_paragraph(caption)
+    doc.add_paragraph("Table 9. DeLong test results comparing deep-learning ROC AUC against the Random Forest feature model.")
 
     add_heading(doc, "Data Availability", level=1)
     doc.add_paragraph("All generated figures, tables, and summaries are available in the GitHub repository and were used to construct this submission-ready manuscript document.")
