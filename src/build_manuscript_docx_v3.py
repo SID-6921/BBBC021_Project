@@ -11,7 +11,7 @@ from docx.shared import Inches, Pt
 
 ROOT = Path(__file__).resolve().parent.parent
 TEMPLATE_PATH = Path(r"C:\Users\nanda\Downloads\Manuscript (2).docx")
-OUTPUT_PATH = ROOT / "results_summary" / "BBBC021_Manuscript_Submission_v3.docx"
+OUTPUT_PATH = ROOT / "results_summary" / "BBBC021_Manuscript_Submission_v4.docx"
 MARKDOWN_PATH = ROOT / "results_summary" / "manuscript_mdpi_toxins_v3.md"
 
 FIGURE_CAPTIONS = {
@@ -30,19 +30,23 @@ FIGURE_CAPTIONS = {
     "figure9_deep_learning_training.png": "Figure 9B. CNN optimization curve (training vs validation loss).",
     "figure10_confusion_matrix_rf.png": "Figure 10. Confusion matrix for Random Forest on advanced test split.",
     "figure11_confusion_matrix_cnn.png": "Figure 11. Confusion matrix for compact CNN on advanced test split.",
-    "figure12_confusion_matrix_resnet18.png": "Figure 12. Confusion matrix for ResNet-18 transfer baseline.",
-    "figure13_calibration_curves.png": "Figure 13. Reliability (calibration) curves for all evaluated models.",
+    "figure11_confusion_matrix_lr_12class.png": "Figure 11. 10-class confusion matrix for Logistic Regression (reviewer revision).",
+    "figure12_confusion_matrix_rf_12class.png": "Figure 12. 10-class confusion matrix for Random Forest (reviewer revision).",
+    "figure13_confusion_matrix_resnet_pretrained_12class.png": "Figure 13. 10-class confusion matrix for pretrained ResNet-18 (reviewer revision).",
+    "figure12_confusion_matrix_resnet18.png": "Figure S2. Confusion matrix for ResNet-18 scratch baseline.",
+    "figure13_calibration_curves.png": "Figure 14. Reliability (calibration) curves for all evaluated models.",
     "figure14_pca_batch_before.png": "Figure 14. PCA visualization of batch effects before normalization.",
     "figure15_pca_batch_after.png": "Figure 15. PCA visualization of batch effects after normalization.",
     "figure16_feature_ablation.png": "Figure 16. Feature-ablation impact on Random Forest ROC AUC.",
 }
 
 TABLE_SPECS = [
-    ("results_summary/advanced_model_metrics.csv", "Table 1. Advanced model performance metrics."),
+    ("results_summary/advanced_model_metrics.csv", "Table 1. Model performance metrics with 95% bootstrap confidence intervals."),
+    ("results_summary/model_comparison_transfer_learning.csv", "Table 2. Transfer learning comparison: CNN-scratch vs ResNet-scratch vs ResNet-pretrained."),
     ("results_summary/advanced_calibration_ece.csv", "Table 2. Calibration error summary (ECE)."),
     ("results_summary/advanced_feature_ablation.csv", "Table 3. Feature-ablation outcomes."),
     ("results_summary/advanced_biological_validation.csv", "Table 4. Biological validation statistics for top features."),
-    ("results_summary/advanced_computational_cost.csv", "Table 5. Computational cost comparison."),
+    ("results_summary/advanced_computational_cost.csv", "Table 5. Computational cost comparison (train time, peak RAM, pretrained weights)."),
     ("results_summary/advanced_nested_cv.csv", "Table 6. Nested cross-validation stability summary."),
     ("results_summary/robustness_classification.csv", "Table 7. Robustness classification across threshold settings."),
 ]

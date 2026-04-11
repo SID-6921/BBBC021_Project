@@ -1,8 +1,10 @@
 {
-  "n_samples": 1600,
-  "n_train": 1088,
-  "n_val": 192,
-  "n_test": 320,
+  "n_samples": 824,
+  "n_train": 560,
+  "n_val": 99,
+  "n_test": 165,
+  "n_classes": 10,
   "metrics_file": "results_summary/advanced_model_metrics.csv",
+  "robustness_file": "results_summary/robustness_classification.csv",
   "delong_file": "results_summary/advanced_delong_tests.json"
 }
