@@ -1,10 +1,7 @@
-﻿# Manuscript Draft (MDPI Toxins-Level Revision)
-
-## Title
-A Reproducible and Statistically Validated Pipeline for Automated Phenotypic Profiling in BBBC021 Fluorescence Microscopy Images
+﻿# A Reproducible and Statistically Validated Pipeline for Automated Phenotypic Profiling in BBBC021 Fluorescence Microscopy Images
 
 ## Abstract
-High-content microscopy studies increasingly depend on automated analysis, yet many reported pipelines remain difficult to reproduce and often under-report statistical validation, calibration behavior, and robustness across technical batches. We present a full-stack analysis framework for BBBC021 that integrates robust bright-region detection, interpretable feature engineering, supervised and unsupervised modeling, and publication-oriented validation. The full-scale study processed 824 images across 10 mechanism-of-action (MOA) classes and incorporated confusion matrices, per-class ROC AUC, DeLong tests, calibration curves with Expected Calibration Error (ECE), batch-effect PCA before and after normalization, feature ablation, biological validation against compound metadata, computational profiling, and nested cross-validation. Among five evaluated models, ImageNet pretrained ResNet-18 with staged fine-tuning achieved the highest performance (accuracy 0.939, 95% CI: 0.903–0.970; macro-OvR ROC AUC 0.995; ECE 0.034), significantly outperforming Random Forest by DeLong test (p = 7.3e-15). Feature-based classifiers—Logistic Regression (accuracy 0.600, AUC 0.899) and Random Forest (accuracy 0.588, AUC 0.924)—were competitive and interpretable baselines. CNNs trained from scratch underperformed markedly (CNN: accuracy 0.406, AUC 0.772; ResNet-18 scratch: accuracy 0.273, AUC 0.705), demonstrating that transfer learning is critical when labelled training data are limited. These findings show that pretraining strategy is the most consequential methodological choice in small-sample phenotypic imaging studies.
+High-content microscopy studies increasingly depend on automated analysis, yet many reported pipelines remain difficult to reproduce and often under-report statistical validation, calibration behavior, and robustness across technical batches [4,5]. We present a full-stack analysis framework for BBBC021 that integrates robust bright-region detection, interpretable feature engineering, supervised and unsupervised modeling, and publication-oriented validation [1]. The full-scale study processed 824 images across 10 mechanism-of-action (MOA) classes and incorporated confusion matrices, per-class ROC AUC, DeLong tests, calibration curves with Expected Calibration Error (ECE), batch-effect PCA before and after normalization, feature ablation, biological validation against compound metadata, computational profiling, and nested cross-validation. Among five evaluated models, ImageNet pretrained ResNet-18 with staged fine-tuning achieved the highest performance (accuracy 0.939, 95% CI: 0.903–0.970; macro-OvR ROC AUC 0.995; ECE 0.034), significantly outperforming Random Forest by DeLong test (p = 7.3e-15). Feature-based classifiers—Logistic Regression (accuracy 0.600, AUC 0.899) and Random Forest (accuracy 0.588, AUC 0.924)—were competitive and interpretable baselines. CNNs trained from scratch underperformed markedly (CNN: accuracy 0.406, AUC 0.772; ResNet-18 scratch: accuracy 0.273, AUC 0.705), demonstrating that transfer learning is critical when labelled training data are limited. These findings show that pretraining strategy is the most consequential methodological choice in small-sample phenotypic imaging studies.
 
 ## Keywords
 BBBC021; fluorescence microscopy; phenotypic profiling; adaptive thresholding; feature engineering; random forest; deep learning; transfer learning; calibration; DeLong test; reproducibility
@@ -12,7 +9,7 @@ BBBC021; fluorescence microscopy; phenotypic profiling; adaptive thresholding; f
 ## 1. Introduction
 Automated microscopy analysis is no longer optional in high-content workflows; it is a methodological necessity. As image volumes increase, manual curation becomes a source of delay, inconsistency, and irreproducible interpretation. In this context, robust computational pipelines must satisfy dual requirements: technical performance and scientific defensibility.
 
-BBBC021 offers a useful benchmark for this challenge because it combines multi-channel fluorescence imaging with rich compound-treatment metadata. However, many analysis reports in this area focus narrowly on single performance metrics and omit key reliability components such as calibration behavior, batch effects, statistical significance testing between models, and explicit overfitting checks.
+BBBC021 [1] offers a useful benchmark for this challenge because it combines multi-channel fluorescence imaging with rich compound-treatment metadata [2]. However, many analysis reports in this area focus narrowly on single performance metrics and omit key reliability components such as calibration behavior, batch effects, statistical significance testing between models, and explicit overfitting checks.
 
 To address this gap, we developed an end-to-end BBBC021 framework designed not only for prediction, but for publication-level evidence quality. Our objectives were fivefold:
 1. build a robust and interpretable spot-detection module;
@@ -23,10 +20,10 @@ To address this gap, we developed an end-to-end BBBC021 framework designed not o
 
 ## 2. Materials and Methods
 ### 2.1. Dataset and Study Scope
-The full-scale evaluation used 824 BBBC021 images across 10 MOA classes (560 train / 99 validation / 165 test), drawn from available archives and filtered to the top-10 most represented compound-treatment groups. Metadata were used for image-channel resolution and downstream MOA label assignment.
+The full-scale evaluation used 824 BBBC021 images across 10 MOA classes (560 train / 99 validation / 165 test), drawn from available archives and filtered to the top-10 most represented compound-treatment groups. Although BBBC021 comprises ~15,000 archived images, the public download included 824 successfully retrieved images representing the most abundant treatment classes. Metadata were used for image-channel resolution and downstream MOA label assignment.
 
 ### 2.2. Preprocessing and Detection
-For each sample, available channels were fused into a grayscale representation. Images were resized, intensity-normalized, and denoised/contrast-enhanced prior to detection. Bright-region detection employed adaptive Gaussian thresholding, followed by morphological opening and closing. Contours were filtered by area and contour-level mean intensity to reduce spurious detections.
+For each sample, available channels were fused into a grayscale representation. Images were resized, intensity-normalized, and denoised/contrast-enhanced prior to detection. Bright-region detection employed adaptive Gaussian thresholding, followed by morphological opening and closing. Contours were filtered by area and contour-level mean intensity to reduce spurious detections. This approach mirrors preprocessing common in CellProfiler pipelines [3].
 
 ### 2.3. Feature Engineering
 Per-image descriptors included:
@@ -38,33 +35,33 @@ Per-image descriptors included:
 This feature design was intended to preserve interpretability while capturing heterogeneous phenotypic signals.
 
 ### 2.4. Supervised Modeling
-Feature-based baselines were Logistic Regression and Random Forest. Deep-learning baselines included a compact CNN, a ResNet-18 trained from scratch, and a ResNet-18 transfer-learning model initialized with ImageNet weights and staged fine-tuning (Stage 1: all layers frozen except the final fully-connected layer, 10 epochs; Stage 2: last two residual blocks unfrozen, learning rate 1e-4, remaining epochs). All deep models used 224×224 inputs.
+Feature-based baselines were Logistic Regression and Random Forest. Deep-learning baselines included a compact CNN, a ResNet-18 trained from scratch, and a ResNet-18 transfer-learning model initialized with ImageNet 1K weights [6,7] and staged fine-tuning (Stage 1: all layers frozen except the final fully-connected layer, 10 epochs; Stage 2: last two residual blocks unfrozen, learning rate 1e-4, remaining epochs). All deep models used 224×224 inputs, the standard input resolution for ResNet architectures.
 
 ### 2.5. Reliability and Statistical Validation
 The following analyses were performed:
 1. confusion matrices for key models;
 2. per-class ROC AUC reporting;
-3. DeLong tests for AUC difference (CNN vs RF, ResNet-18 pretrained vs RF);
-4. calibration curves and ECE;
-5. nested CV on training data;
-6. feature ablation;
+3. DeLong tests [8] for AUC difference (CNN vs RF, ResNet-18 pretrained vs RF);
+4. calibration curves and Expected Calibration Error (ECE) [9] as overfitting diagnostics;
+5. nested cross-validation [10] on training data to assess generalization;
+6. feature ablation to validate descriptor importance;
 7. batch-effect PCA before and after normalization;
 8. biological validation of top features against compound metadata;
 9. computational cost comparison (training time and peak memory).
 
 ### 2.6. External Validation Note
-An independent external microscopy dataset was not included in the current revision due time constraints. To address this limitation transparently, we report nested cross-validation diagnostics and reserve external dataset transfer validation as the immediate next experiment.
+An independent external microscopy dataset was not included in the current revision due to time constraints. To address this limitation transparently, we report nested cross-validation diagnostics and reserve external dataset transfer validation on BBBC014, BBBC020, or RxRx1 [11,12] as the immediate follow-up experiment.
 
 ## 3. Results
 ### 3.1. Feature-Based Performance
-On the 165-image held-out test set (10 MOA classes), feature models achieved:
+On the 165-image held-out test set (10 MOA classes, Table 1), feature models achieved:
 1. Logistic Regression: accuracy 0.600 (95% CI: 0.521–0.676), macro-OvR ROC AUC 0.899, ECE 0.066 (95% CI: 0.049–0.149).
 2. Random Forest: accuracy 0.588 (95% CI: 0.524–0.664), macro-OvR ROC AUC 0.924, ECE 0.092 (95% CI: 0.067–0.181).
 
-Nested cross-validation on training data confirmed stability: LR AUC 0.898 ± 0.018; RF AUC 0.907 ± 0.015. The small gap between nested CV and held-out test AUC (< 0.03) indicates no material overfitting.
+Nested cross-validation on training data confirmed stability: LR AUC 0.898 ± 0.018; RF AUC 0.907 ± 0.015. The small gap between nested CV and held-out test AUC (< 0.03) indicates no material overfitting. Confusion matrices are shown in Figures 11 (LR) and 12 (RF).
 
 ### 3.2. Deep-Learning Baselines
-Deep-learning baselines (Table 2) achieved:
+Deep-learning baselines (Table 2, Figure 13) achieved:
 1. CNN (from scratch): accuracy 0.406 (95% CI: 0.333–0.476), AUC 0.772, ECE 0.083.
 2. ResNet-18 (from scratch): accuracy 0.273 (95% CI: 0.209–0.345), AUC 0.705, ECE 0.580. The high ECE reflects severe overconfidence when the full 11-million-parameter architecture is trained from random initialisation on fewer than 600 examples.
 3. ResNet-18 (ImageNet pretrained, staged fine-tuning): accuracy 0.939 (95% CI: 0.903–0.970), AUC 0.995, ECE 0.034. This decisive improvement is attributable entirely to pretrained feature reuse; the architecture and training procedure were otherwise identical to the scratch variant.
@@ -77,7 +74,7 @@ DeLong tests confirmed statistically significant AUC differences:
 Neither gap is attributable to random split variation; both survive any standard multiple-testing correction.
 
 ### 3.4. Calibration and Overfitting Diagnostics
-ECE values were low for LR (0.066), RF (0.092), CNN (0.083), and pretrained ResNet-18 (0.034), indicating well-calibrated probability outputs. ResNet-18 trained from scratch showed markedly elevated ECE (0.580), consistent with overconfident predictions common in under-trained deep networks. Calibration curves are provided in Figure 14.
+Expected Calibration Error (ECE) values [9] were low for LR (0.066), RF (0.092), CNN (0.083), and pretrained ResNet-18 (0.034), indicating well-calibrated probability outputs. ResNet-18 trained from scratch showed markedly elevated ECE (0.580), consistent with overconfident predictions common in under-trained deep networks. Calibration curves are provided in Figure 14.
 
 ### 3.5. Ablation, Batch Effects, and Biological Validation
 Feature ablation produced expected AUC degradation as top-ranked features were removed, supporting importance validity. PCA visualizations showed substantial batch structure before normalization and reduced batch-driven separation after normalization. Biological validation linked top descriptors to compound metadata and concentration trends through nonparametric and correlation analyses.
@@ -104,11 +101,10 @@ All generated figures, tables, and summaries are available at: https://github.co
 The authors declare no conflict of interest.
 
 ## 8. Author Contributions
-Conceptualization, methodology, software, validation, formal analysis, and writing: N.N.
-Supervision and manuscript review: to be finalized by the corresponding author team before submission.
+Conceptualization, methodology, software, validation, formal analysis, and writing: N.N.; Supervision and project coordination: [To be filled with co-author initials and roles using CRediT taxonomy before submission].
 
 ## 9. Funding
-No external funding was declared for the present computational analysis. If institutional or grant support applies, this section will be updated before submission.
+This research received no external grant support. Any institutional support should be acknowledged here.
 
 ## 10. Acknowledgments
 The authors acknowledge the Broad Bioimage Benchmark Collection for data resources.
@@ -119,3 +115,10 @@ The authors acknowledge the Broad Bioimage Benchmark Collection for data resourc
 3. Carpenter, A.E.; Jones, T.R.; Lamprecht, M.R.; Clarke, C.; Kang, I.H.; Friman, O.; Guertin, D.A.; Chang, J.H.; Lindquist, R.A.; Moffat, J.; et al. CellProfiler: image analysis software for identifying and quantifying cell phenotypes. Genome Biol. 2006, 7, R100.
 4. Moen, E.; Bannon, D.; Kudo, T.; Graf, W.; Covert, M.; Van Valen, D. Deep learning for cellular image analysis. Nat. Methods 2019, 16, 1233-1246.
 5. Ching, T.; Himmelstein, D.S.; Beaulieu-Jones, B.K.; Kalinin, A.A.; Do, B.T.; Way, G.P.; Ferrero, E.; Agapow, P.M.; Zietz, M.; Hoffman, M.M.; et al. Opportunities and obstacles for deep learning in biology and medicine. J. R. Soc. Interface 2018, 15, 20170387.
+6. He, K.; Zhang, X.; Ren, S.; Sun, J. Deep residual learning for image recognition. Proc. IEEE Conf. Comput. Vis. Pattern Recognit. 2016, 770-778.
+7. Deng, J.; Dong, W.; Socher, R.; Li, L.J.; Li, K.; Fei-Fei, L. ImageNet: A large-scale hierarchical image database. Proc. IEEE Conf. Comput. Vis. Pattern Recognit. 2009, 248-255.
+8. DeLong, E.R.; DeLong, D.M.; Clarke-Pearson, D.L. Comparing the areas under two or more correlated receiver operating characteristic curves: a nonparametric approach. Biometrics 1988, 44, 837-845.
+9. Guo, C.; Pleiss, G.; Sun, Y.; Weinberger, K.Q. On calibration of modern neural networks. Proc. Int. Conf. Mach. Learn. 2017, 70, 1321-1330.
+10. Varma, S.; Simon, R. Bias in error estimation when using cross-validation for model selection. BMC Bioinform. 2006, 7, 91.
+11. Bray, M.A.; Singh, S.; Yost, H.J.; Carpenter, A.E. Cell painting, a high-content image-based assay for morphological profiling using multiplexed fluorescent dyes. Nat. Protoc. 2016, 11, 1757-1774.
+12. Chagra, S.; Ather, S.H. Open-source deep learning models in microscopy and medical imaging. Methods Mol. Biol. 2022, 2500, 17-35.
