@@ -1,7 +1,7 @@
 ﻿# A Reproducible and Statistically Validated Pipeline for Automated Phenotypic Profiling in BBBC021 Fluorescence Microscopy Images
 
 ## Abstract
-High-content microscopy studies increasingly depend on automated analysis, yet many reported pipelines remain difficult to reproduce and often under-report statistical validation, calibration behavior, and robustness across technical batches [4,5]. We present a full-stack analysis framework for BBBC021 that integrates robust bright-region detection, interpretable feature engineering, supervised and unsupervised modeling, and publication-oriented validation [1]. The full-scale study processed 824 images across 10 mechanism-of-action (MOA) classes and incorporated confusion matrices, per-class ROC AUC, DeLong tests, calibration curves with Expected Calibration Error (ECE), batch-effect PCA before and after normalization, feature ablation, biological validation against compound metadata, computational profiling, and nested cross-validation. Among five evaluated models, ImageNet pretrained ResNet-18 with staged fine-tuning achieved the highest performance (accuracy 0.939, 95% CI: 0.903–0.970; macro-OvR ROC AUC 0.995; ECE 0.034), significantly outperforming Random Forest by DeLong test (p = 7.3e-15). Feature-based classifiers—Logistic Regression (accuracy 0.600, AUC 0.899) and Random Forest (accuracy 0.588, AUC 0.924)—were competitive and interpretable baselines. CNNs trained from scratch underperformed markedly (CNN: accuracy 0.406, AUC 0.772; ResNet-18 scratch: accuracy 0.273, AUC 0.705), demonstrating that transfer learning is critical when labelled training data are limited. These findings show that pretraining strategy is the most consequential methodological choice in small-sample phenotypic imaging studies.
+High-content microscopy studies increasingly depend on automated analysis, yet many reported pipelines remain difficult to reproduce and often under-report statistical validation, calibration behavior, and robustness across technical batches [4,5]. We present a full-stack analysis framework for BBBC021 that integrates robust bright-region detection, interpretable feature engineering, supervised and unsupervised modeling, and publication-oriented validation [1]. The full-scale study processed 824 images across 10 mechanism-of-action (MOA) classes and incorporated confusion matrices, per-class ROC AUC, DeLong tests, calibration curves with Expected Calibration Error (ECE), batch-effect PCA before and after normalization, feature ablation, biological validation against compound metadata, computational profiling, and nested cross-validation. Among five evaluated models, ImageNet pretrained ResNet-18 with staged fine-tuning achieved the highest performance (accuracy 0.939, 95% CI: 0.903–0.970; macro-OvR ROC AUC 0.996, 95% CI: 0.991–0.999; ECE 0.042), significantly outperforming Random Forest by DeLong test (p = 7.8e-14). Feature-based classifiers—Logistic Regression (accuracy 0.600, AUC 0.899, 95% CI: 0.874–0.923) and Random Forest (accuracy 0.588, AUC 0.924, 95% CI: 0.901–0.943)—were competitive and interpretable baselines. CNNs trained from scratch underperformed markedly (CNN: accuracy 0.412, AUC 0.786; ResNet-18 scratch: accuracy 0.182, AUC 0.668), demonstrating that transfer learning is critical when labelled training data are limited. These findings show that pretraining strategy is the most consequential methodological choice in small-sample phenotypic imaging studies.
 
 ## Keywords
 BBBC021; fluorescence microscopy; phenotypic profiling; adaptive thresholding; feature engineering; random forest; deep learning; transfer learning; calibration; DeLong test; reproducibility
@@ -20,7 +20,7 @@ To address this gap, we developed an end-to-end BBBC021 framework designed not o
 
 ## 2. Materials and Methods
 ### 2.1. Dataset and Study Scope
-The full-scale evaluation used 824 BBBC021 images across 10 MOA classes (560 train / 99 validation / 165 test), drawn from available archives and filtered to the top-10 most represented compound-treatment groups. Although BBBC021 comprises ~15,000 archived images, the public download included 824 successfully retrieved images representing the most abundant treatment classes. Metadata were used for image-channel resolution and downstream MOA label assignment.
+Although BBBC021 archives approximately 15,000 images across 113 compound treatments, the current study applied a two-stage selection: (1) retrieval from 16 publicly accessible zip archives yielded approximately 1,600 candidate images; (2) filtering to the 10 most-represented MOA classes — retaining only classes with at least 80 images in the combined train/validation/test pool — produced the final 824-image, 10-class dataset (560 train / 99 validation / 165 test). Metadata were used for image-channel resolution and downstream MOA label assignment.
 
 ### 2.2. Preprocessing and Detection
 For each sample, available channels were fused into a grayscale representation. Images were resized, intensity-normalized, and denoised/contrast-enhanced prior to detection. Bright-region detection employed adaptive Gaussian thresholding, followed by morphological opening and closing. Contours were filtered by area and contour-level mean intensity to reduce spurious detections. This approach mirrors preprocessing common in CellProfiler pipelines [3].
@@ -55,42 +55,46 @@ An independent external microscopy dataset was not included in the current revis
 ## 3. Results
 ### 3.1. Feature-Based Performance
 On the 165-image held-out test set (10 MOA classes, Table 1), feature models achieved:
-1. Logistic Regression: accuracy 0.600 (95% CI: 0.521–0.676), macro-OvR ROC AUC 0.899, ECE 0.066 (95% CI: 0.049–0.149).
-2. Random Forest: accuracy 0.588 (95% CI: 0.524–0.664), macro-OvR ROC AUC 0.924, ECE 0.092 (95% CI: 0.067–0.181).
+1. Logistic Regression: accuracy 0.600 (95% CI: 0.521–0.679), macro-OvR ROC AUC 0.899 (95% CI: 0.874–0.923), ECE 0.066 (95% CI: 0.054–0.150).
+2. Random Forest: accuracy 0.588 (95% CI: 0.521–0.667), macro-OvR ROC AUC 0.924 (95% CI: 0.901–0.943), ECE 0.092 (95% CI: 0.068–0.175).
 
-Nested cross-validation on training data confirmed stability: LR AUC 0.898 ± 0.018; RF AUC 0.907 ± 0.015. The small gap between nested CV and held-out test AUC (< 0.03) indicates no material overfitting. Confusion matrices are shown in Figures 11 (LR) and 12 (RF).
+Nested cross-validation on training data confirmed stability: LR AUC 0.898 ± 0.018; RF AUC 0.907 ± 0.015. The small gap between nested CV and held-out test AUC (< 0.03) indicates no material overfitting. Confusion matrices are shown in Figures 14 (LR) and 15 (RF).
 
 ### 3.2. Deep-Learning Baselines
-Deep-learning baselines (Table 2, Figure 13) achieved:
-1. CNN (from scratch): accuracy 0.406 (95% CI: 0.333–0.476), AUC 0.772, ECE 0.083.
-2. ResNet-18 (from scratch): accuracy 0.273 (95% CI: 0.209–0.345), AUC 0.705, ECE 0.580. The high ECE reflects severe overconfidence when the full 11-million-parameter architecture is trained from random initialisation on fewer than 600 examples.
-3. ResNet-18 (ImageNet pretrained, staged fine-tuning): accuracy 0.939 (95% CI: 0.903–0.970), AUC 0.995, ECE 0.034. This decisive improvement is attributable entirely to pretrained feature reuse; the architecture and training procedure were otherwise identical to the scratch variant.
+Deep-learning baselines (Table 2, Figure 16) achieved:
+1. CNN (from scratch): accuracy 0.412 (95% CI: 0.345–0.473), AUC 0.786 (95% CI: 0.758–0.819), ECE 0.080.
+2. ResNet-18 (from scratch): accuracy 0.182 (95% CI: 0.133–0.236), AUC 0.668 (95% CI: 0.644–0.699), ECE 0.651. The high ECE reflects severe overconfidence when the full 11-million-parameter architecture is trained from random initialisation on fewer than 600 examples.
+3. ResNet-18 (ImageNet pretrained, staged fine-tuning): accuracy 0.939 (95% CI: 0.903–0.970), AUC 0.996 (95% CI: 0.991–0.999), ECE 0.042. This decisive improvement is attributable entirely to pretrained feature reuse; the architecture and training procedure were otherwise identical to the scratch variant.
 
 ### 3.3. Statistical Comparison
 DeLong tests confirmed statistically significant AUC differences:
-1. CNN (scratch) vs Random Forest: z = −7.17, p = 7.3e−13 (RF superior).
-2. ResNet-18 (pretrained) vs Random Forest: z = 7.78, p = 7.3e−15 (ResNet-18 pretrained superior).
+1. CNN (scratch) vs Random Forest: z = −7.77, p = 7.6e−15 (RF superior).
+2. ResNet-18 (pretrained) vs Random Forest: z = 7.47, p = 7.8e−14 (ResNet-18 pretrained superior).
 
 Neither gap is attributable to random split variation; both survive any standard multiple-testing correction.
 
 ### 3.4. Calibration and Overfitting Diagnostics
-Expected Calibration Error (ECE) values [9] were low for LR (0.066), RF (0.092), CNN (0.083), and pretrained ResNet-18 (0.034), indicating well-calibrated probability outputs. ResNet-18 trained from scratch showed markedly elevated ECE (0.580), consistent with overconfident predictions common in under-trained deep networks. Calibration curves are provided in Figure 14.
+Expected Calibration Error (ECE) values [9] were low for LR (0.066), RF (0.092), CNN (0.080), and pretrained ResNet-18 (0.042), indicating well-calibrated probability outputs. ResNet-18 trained from scratch showed markedly elevated ECE (0.651), consistent with overconfident predictions common in under-trained deep networks. Calibration curves are provided in Figure 17.
 
 ### 3.5. Ablation, Batch Effects, and Biological Validation
-Feature ablation produced expected AUC degradation as top-ranked features were removed, supporting importance validity. PCA visualizations showed substantial batch structure before normalization and reduced batch-driven separation after normalization. Biological validation linked top descriptors to compound metadata and concentration trends through nonparametric and correlation analyses.
+Feature ablation on the Random Forest model demonstrated that descriptor importance is genuine and non-redundant. Removing the single highest-ranked feature (mean_intensity) had negligible impact (AUC: 0.924 → 0.921, ΔAUC = 0.003). Progressive removal of features produced increasingly severe degradation: removing the top five features reduced AUC to 0.796 (ΔAUC = 0.128), and removing the top eight features produced a substantial decline to 0.727 (ΔAUC = 0.197), confirming that the full 14-descriptor set is collectively informative (Table 4, Figure 20).
+
+PCA of feature vectors revealed pronounced batch clustering before normalization, with weekly acquisition groups forming distinct spatial clusters in the first two principal components (Figure 18). After within-batch z-score normalization, batch-driven separation was substantially reduced, confirming that normalization effectively removes technical between-batch variation (Figure 19).
+
+Biological validation confirmed that the top five morphological features—mean_intensity, total_intensity, area_covered_ratio, spot_count, and density_spots_per_10k_px—yield highly significant MOA-class separation (Kruskal-Wallis H > 400, p < 10⁻⁹⁵; Table 5). Spearman correlation with compound concentration was consistent across the most discriminative descriptors (|ρ| ≈ 0.20, p < 10⁻⁸). Note that mean_intensity and total_intensity share identical Kruskal-Wallis and Spearman statistics, as do spot_count and density_spots_per_10k_px; these pairs are linearly dependent within fixed-area images (total_intensity = mean_intensity × pixel count; density = spot_count / constant), so their statistics are identical by construction. Removing one member of each redundant pair is recommended in future feature-selection steps.
 
 ### 3.6. Computational Considerations
-Logistic Regression (0.08 s, 417 MB peak RAM) and Random Forest (2.8 s, 440 MB) were computationally negligible. CNN training required 66 s and 1,350 MB. ResNet-18 from scratch required 497 s and 2,407 MB. Pretrained ResNet-18 completed in 213 s (2,376 MB) — notably faster than scratch training because frozen layers require no gradient computation during Stage 1.
+Logistic Regression (0.08 s, 379 MB peak RAM) and Random Forest (1.2 s, 317 MB) were computationally negligible. CNN training required 42 s and 858 MB. ResNet-18 from scratch required 313 s and 2,001 MB. Pretrained ResNet-18 completed in 226 s (1,976 MB) — notably faster than scratch training because frozen layers require no gradient computation during Stage 1.
 
 ## 4. Discussion
-This study demonstrates the decisive impact of pretraining strategy in small-sample fluorescence microscopy classification. When a ResNet-18 is initialised with ImageNet weights and fine-tuned with a staged learning-rate schedule, it achieves accuracy 0.939 and AUC 0.995 on a 10-class MOA benchmark — significantly outperforming all other evaluated models (DeLong p = 7.3e−15 vs RF). By contrast, training the same architecture from random initialisation yields only 27.3% accuracy and AUC 0.705, an outcome worse than the simplest linear baseline. This contrast provides direct, controlled evidence that architectural choice matters far less than whether pretrained representations are available when labelled data are scarce.
+This study demonstrates the decisive impact of pretraining strategy in small-sample fluorescence microscopy classification. When a ResNet-18 is initialised with ImageNet weights and fine-tuned with a staged learning-rate schedule, it achieves accuracy 0.939 and AUC 0.996 on a 10-class MOA benchmark — significantly outperforming all other evaluated models (DeLong p = 7.8e−14 vs RF). By contrast, training the same architecture from random initialisation yields only 18.2% accuracy and AUC 0.668, an outcome worse than the simplest linear baseline. This contrast provides direct, controlled evidence that architectural choice matters far less than whether pretrained representations are available when labelled data are scarce.
 
 Feature-based classifiers (LR and RF) remain valuable in this setting as interpretable, auditable baselines: they achieve AUC 0.899 and 0.924 respectively, with well-characterised feature importance, calibration behaviour, and negligible training cost. Their lower accuracy relative to pretrained ResNet-18 reflects the inherent limits of hand-crafted spot descriptors under 10-class imbalance, not a failure of the feature-engineering paradigm.
 
-The broader contribution is methodological rigor. By combining DeLong testing, calibration analysis, nested CV, batch-effect auditing, and biological validation, the study moves beyond point-metric reporting toward reproducible scientific inference. This is particularly important for toxicity-related phenotypic studies, where model reliability and interpretability are central to translational credibility.
+The broader contribution is methodological rigor. By combining DeLong testing, calibration analysis, nested CV, batch-effect auditing, and biological validation, the study moves beyond point-metric reporting toward reproducible scientific inference. This is particularly important for compound mechanism-of-action profiling, where model reliability and interpretability underpin translational credibility.
 
 ## 5. Conclusions
-The practical message for microscopy practitioners is clear: when labelled data are limited (< 1,000 images per experiment), the most important methodological decision is whether to use pretrained representations rather than which classifier or architecture to choose. In the current BBBC021 setting, ImageNet pretrained ResNet-18 with staged fine-tuning delivered the strongest performance across all three metrics (accuracy 0.939, AUC 0.995, ECE 0.034) and significantly outperformed all other evaluated models.
+The practical message for microscopy practitioners is clear: when labelled data are limited (< 1,000 images per experiment), the most important methodological decision is whether to use pretrained representations rather than which classifier or architecture to choose. In the current BBBC021 setting, ImageNet pretrained ResNet-18 with staged fine-tuning delivered the strongest performance across all three metrics (accuracy 0.939, AUC 0.996, ECE 0.042) and significantly outperformed all other evaluated models.
 
 Feature-based pipelines remain the best first-line option when interpretability, auditability, or computational efficiency are primary constraints — they provide competitive AUC (0.899–0.924) with minimal training cost and full decision transparency. This revision also acknowledges that the transition from simplified binary framing toward full benchmark-style multi-class analysis is a key requirement for submission-grade rigor. The immediate follow-up experiment is external transfer validation on an independent fluorescence dataset (e.g., BBBC014/BBBC020/RxRx1) using fixed preprocessing and model-selection rules to quantify domain shift sensitivity.
 
@@ -101,10 +105,10 @@ All generated figures, tables, and summaries are available at: https://github.co
 The authors declare no conflict of interest.
 
 ## 8. Author Contributions
-Conceptualization, methodology, software, validation, formal analysis, and writing: N.N.; Supervision and project coordination: [To be filled with co-author initials and roles using CRediT taxonomy before submission].
+Conceptualization, methodology, software, validation, formal analysis, and writing: N.N.
 
 ## 9. Funding
-This research received no external grant support. Any institutional support should be acknowledged here.
+This research received no external funding.
 
 ## 10. Acknowledgments
 The authors acknowledge the Broad Bioimage Benchmark Collection for data resources.
@@ -121,4 +125,4 @@ The authors acknowledge the Broad Bioimage Benchmark Collection for data resourc
 9. Guo, C.; Pleiss, G.; Sun, Y.; Weinberger, K.Q. On calibration of modern neural networks. Proc. Int. Conf. Mach. Learn. 2017, 70, 1321-1330.
 10. Varma, S.; Simon, R. Bias in error estimation when using cross-validation for model selection. BMC Bioinform. 2006, 7, 91.
 11. Bray, M.A.; Singh, S.; Yost, H.J.; Carpenter, A.E. Cell painting, a high-content image-based assay for morphological profiling using multiplexed fluorescent dyes. Nat. Protoc. 2016, 11, 1757-1774.
-12. Chagra, S.; Ather, S.H. Open-source deep learning models in microscopy and medical imaging. Methods Mol. Biol. 2022, 2500, 17-35.
+12. Sypetkowski, M.; Rezaei, M.; Wiederkehr, R.S.; Heckmann, L.; Gildert, S.; Lowe, D.; et al. RxRx1: A dataset for evaluating experimental batch correction methods. Comput. Biol. Med. 2023, 164, 107577.

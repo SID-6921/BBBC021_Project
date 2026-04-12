@@ -507,9 +507,8 @@ def fit_classical_models(x_train: pd.DataFrame, y_train: np.ndarray) -> tuple[Pi
 
 
 def multiclass_auc(y_true: np.ndarray, y_prob: np.ndarray) -> float:
-    classes = np.arange(y_prob.shape[1])
-    y_bin = label_binarize(y_true, classes=classes)
-    return float(roc_auc_score(y_bin, y_prob, average="macro", multi_class="ovr"))
+    # Pass 1-D y_true directly; sklearn handles OvR binarization internally.
+    return float(roc_auc_score(y_true, y_prob, average="macro", multi_class="ovr"))
 
 
 def per_class_auc(y_true: np.ndarray, y_prob: np.ndarray, class_names: list[str]) -> dict[str, float]:
@@ -550,14 +549,15 @@ def bootstrap_ci(y_true: np.ndarray, y_prob: np.ndarray, n_boot: int = 200) -> d
         try:
             aucs.append(multiclass_auc(ys, ps))
         except Exception:
-            continue
+            pass  # keep eces in sync; skip only the AUC for this resample
         eces.append(ece_score(ys, ps))
 
     def q(v: list[float]) -> tuple[float, float]:
         return float(np.percentile(v, 2.5)), float(np.percentile(v, 97.5))
 
     a_l, a_u = q(accs)
-    u_l, u_u = q(aucs)
+    u_l = float(np.percentile(aucs, 2.5)) if aucs else float("nan")
+    u_u = float(np.percentile(aucs, 97.5)) if aucs else float("nan")
     e_l, e_u = q(eces)
     return {
         "acc_ci_low": a_l,
@@ -608,25 +608,40 @@ def _fast_delong(predictions_sorted_transposed: np.ndarray, label_1_count: int):
     return aucs, s
 
 
-def delong_test_multiclass_micro(y_true: np.ndarray, p1: np.ndarray, p2: np.ndarray) -> dict[str, float]:
-    # Micro-style flattening of one-vs-rest targets/probabilities for a binary DeLong application.
-    classes = np.arange(p1.shape[1])
-    y_bin = label_binarize(y_true, classes=classes).ravel()
-    pred1 = p1.ravel()
-    pred2 = p2.ravel()
+def delong_test_multiclass_macro(y_true: np.ndarray, p1: np.ndarray, p2: np.ndarray) -> dict[str, float]:
+    """DeLong significance test using macro-OvR AUC — consistent with roc_auc_macro_ovr in Table 1.
 
-    order = np.argsort(-y_bin)
-    label_1_count = int(np.sum(y_bin))
-    preds = np.vstack([pred1, pred2])[:, order]
-    aucs, cov = _fast_delong(preds, label_1_count)
-    diff = aucs[0] - aucs[1]
-    var = cov[0, 0] + cov[1, 1] - 2 * cov[0, 1]
-    z = float(diff / np.sqrt(max(var, 1e-12)))
+    Per-class binary DeLong results are computed independently for each of the K classes
+    and pooled under the assumption of class independence, yielding a macro-averaged
+    AUC value and a corresponding z-statistic.
+    """
+    K = p1.shape[1]
+    y_bin = label_binarize(y_true, classes=np.arange(K))  # (n, K)
+    aucs1: list[float] = []
+    aucs2: list[float] = []
+    var_diffs: list[float] = []
+    for k in range(K):
+        m = int(y_bin[:, k].sum())
+        n_neg = len(y_bin) - m
+        if m == 0 or n_neg == 0:
+            continue
+        order = np.argsort(-y_bin[:, k])
+        preds_k = np.vstack([p1[:, k], p2[:, k]])[:, order]
+        aucs_k, cov_k = _fast_delong(preds_k, m)
+        aucs1.append(float(aucs_k[0]))
+        aucs2.append(float(aucs_k[1]))
+        var_diffs.append(float(cov_k[0, 0] + cov_k[1, 1] - 2.0 * cov_k[0, 1]))
+    K_eff = len(aucs1)
+    auc1_macro = float(np.mean(aucs1))
+    auc2_macro = float(np.mean(aucs2))
+    diff = auc1_macro - auc2_macro
+    var_macro = float(sum(var_diffs)) / (K_eff ** 2)
+    z = float(diff / np.sqrt(max(var_macro, 1e-12)))
     p_value = float(2 * norm.sf(abs(z)))
     return {
-        "auc_model_1": float(aucs[0]),
-        "auc_model_2": float(aucs[1]),
-        "auc_diff": float(diff),
+        "auc_model_1": auc1_macro,
+        "auc_model_2": auc2_macro,
+        "auc_diff": diff,
         "z_stat": z,
         "p_value": p_value,
     }
@@ -915,8 +930,8 @@ def run(root: Path, target_total: int = 1600) -> None:
     metrics_df = evaluate_models_with_ci(y_test, class_names, model_probs, model_preds)
 
     # DeLong tests
-    delong_cnn_vs_rf = delong_test_multiclass_micro(y_test, model_probs["cnn_scratch"], model_probs["random_forest"])
-    delong_resnet_pre_vs_rf = delong_test_multiclass_micro(y_test, model_probs["resnet18_pretrained"], model_probs["random_forest"])
+    delong_cnn_vs_rf = delong_test_multiclass_macro(y_test, model_probs["cnn_scratch"], model_probs["random_forest"])
+    delong_resnet_pre_vs_rf = delong_test_multiclass_macro(y_test, model_probs["resnet18_pretrained"], model_probs["random_forest"])
 
     # Figures and tables
     save_confusion_matrix(y_test, model_preds["logistic_regression"], class_names, final_figures / "figure11_confusion_matrix_lr_12class.png", "12-class Confusion Matrix - Logistic Regression")

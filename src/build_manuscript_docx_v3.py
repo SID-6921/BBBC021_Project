@@ -17,38 +17,36 @@ MARKDOWN_PATH = ROOT / "results_summary" / "manuscript_mdpi_toxins_v3.md"
 FIGURE_CAPTIONS = {
     "figure1_pipeline_workflow.png": "Figure 1. End-to-end analysis workflow for BBBC021 data curation, preprocessing, detection, feature extraction, modeling, and validation.",
     "figure2_detection_samples.png": "Figure 2. Representative detection overlays highlighting bright-region contour localization across sample images.",
-    "figure3_spot_count_boxplot.png": "Figure 3A. Group-wise distribution of spot-count features.",
-    "figure3_mean_intensity_boxplot.png": "Figure 3B. Group-wise distribution of mean-intensity features.",
-    "figure3_density_spots_per_10k_px_boxplot.png": "Figure 3C. Group-wise distribution of spot-density features.",
-    "figure4_classification_roc.png": "Figure 4A. ROC curves for feature-based supervised models.",
-    "figure4_feature_importance.png": "Figure 4B. Random Forest feature-importance ranking.",
-    "figure5_pca_clustering.png": "Figure 5. PCA projection with clustering overlay for unsupervised structure analysis.",
-    "figure6_batch_robustness.png": "Figure 6. Detection robustness across weekly batches.",
-    "figure7_threshold_sensitivity.png": "Figure 7. Sensitivity profile of metrics across threshold configurations.",
-    "figure8_robustness_classification.png": "Figure 8. Classification performance across robustness configurations.",
-    "figure9_deep_learning_roc.png": "Figure 9A. ROC curve for compact CNN baseline.",
-    "figure9_deep_learning_training.png": "Figure 9B. CNN optimization curve (training vs validation loss).",
-    "figure10_confusion_matrix_rf.png": "Figure 10. Confusion matrix for Random Forest on advanced test split.",
-    "figure11_confusion_matrix_cnn.png": "Figure 11. Confusion matrix for compact CNN on advanced test split.",
-    "figure11_confusion_matrix_lr_12class.png": "Figure 11. 10-class confusion matrix for Logistic Regression (reviewer revision).",
-    "figure12_confusion_matrix_rf_12class.png": "Figure 12. 10-class confusion matrix for Random Forest (reviewer revision).",
-    "figure13_confusion_matrix_resnet_pretrained_12class.png": "Figure 13. 10-class confusion matrix for pretrained ResNet-18 (reviewer revision).",
-    "figure12_confusion_matrix_resnet18.png": "Figure S2. Confusion matrix for ResNet-18 scratch baseline.",
-    "figure13_calibration_curves.png": "Figure 14. Reliability (calibration) curves for all evaluated models.",
-    "figure14_pca_batch_before.png": "Figure 14. PCA visualization of batch effects before normalization.",
-    "figure15_pca_batch_after.png": "Figure 15. PCA visualization of batch effects after normalization.",
-    "figure16_feature_ablation.png": "Figure 16. Feature-ablation impact on Random Forest ROC AUC.",
+    "figure3_spot_count_boxplot.png": "Figure 3. Group-wise distribution of spot count across MOA classes.",
+    "figure3_mean_intensity_boxplot.png": "Figure 4. Group-wise distribution of mean intensity across MOA classes.",
+    "figure3_density_spots_per_10k_px_boxplot.png": "Figure 5. Group-wise distribution of spot density across MOA classes.",
+    "figure4_classification_roc.png": "Figure 6. ROC curves for feature-based supervised classifiers (Logistic Regression and Random Forest).",
+    "figure4_feature_importance.png": "Figure 7. Random Forest feature-importance ranking.",
+    "figure5_pca_clustering.png": "Figure 8. PCA projection with MOA class overlay for unsupervised structure analysis.",
+    "figure6_batch_robustness.png": "Figure 9. Detection performance across weekly acquisition batches.",
+    "figure7_threshold_sensitivity.png": "Figure 10. Sensitivity of detection metrics across threshold configurations.",
+    "figure8_robustness_classification.png": "Figure 11. Classification performance under alternative detection threshold settings.",
+    "figure9_deep_learning_roc.png": "Figure 12. ROC curves for deep-learning models (CNN scratch, ResNet-18 scratch, ResNet-18 pretrained).",
+    "figure9_deep_learning_training.png": "Figure 13. Training and validation loss curves for the compact CNN.",
+    "figure11_confusion_matrix_lr_12class.png": "Figure 14. Confusion matrix for Logistic Regression on the 165-image held-out test set (10 MOA classes).",
+    "figure12_confusion_matrix_rf_12class.png": "Figure 15. Confusion matrix for Random Forest on the 165-image held-out test set (10 MOA classes).",
+    "figure13_confusion_matrix_resnet_pretrained_12class.png": "Figure 16. Confusion matrix for ImageNet pretrained ResNet-18 on the 165-image held-out test set (10 MOA classes).",
+    "figure14_calibration_curves_multiclass.png": "Figure 17. Reliability (calibration) curves for all five evaluated models.",
+    "figure15_pca_batch_before.png": "Figure 18. PCA of feature vectors before within-batch z-score normalization.",
+    "figure16_pca_batch_after.png": "Figure 19. PCA of feature vectors after within-batch z-score normalization.",
+    "figure17_feature_ablation.png": "Figure 20. Feature-ablation impact on Random Forest macro-OvR ROC AUC.",
+    "supplementary_figure_s1_feature_correlation.png": "Supplementary Figure S1. Spearman correlation matrix of top morphological features.",
 }
 
 TABLE_SPECS = [
     ("results_summary/advanced_model_metrics.csv", "Table 1. Model performance metrics with 95% bootstrap confidence intervals."),
     ("results_summary/model_comparison_transfer_learning.csv", "Table 2. Transfer learning comparison: CNN-scratch vs ResNet-scratch vs ResNet-pretrained."),
-    ("results_summary/advanced_calibration_ece.csv", "Table 2. Calibration error summary (ECE)."),
-    ("results_summary/advanced_feature_ablation.csv", "Table 3. Feature-ablation outcomes."),
-    ("results_summary/advanced_biological_validation.csv", "Table 4. Biological validation statistics for top features."),
-    ("results_summary/advanced_computational_cost.csv", "Table 5. Computational cost comparison (train time, peak RAM, pretrained weights)."),
-    ("results_summary/advanced_nested_cv.csv", "Table 6. Nested cross-validation stability summary."),
-    ("results_summary/robustness_classification.csv", "Table 7. Robustness classification across threshold settings."),
+    ("results_summary/advanced_calibration_ece.csv", "Table 3. Calibration error summary (ECE per model)."),
+    ("results_summary/advanced_feature_ablation.csv", "Table 4. Feature-ablation outcomes (Random Forest macro-OvR AUC by features removed)."),
+    ("results_summary/advanced_biological_validation.csv", "Table 5. Biological validation statistics for top morphological features."),
+    ("results_summary/advanced_computational_cost.csv", "Table 6. Computational cost comparison (training time, peak RAM, pretrained weights)."),
+    ("results_summary/advanced_nested_cv.csv", "Table 7. Nested cross-validation stability summary."),
+    ("results_summary/robustness_classification.csv", "Table 8. Robustness classification across threshold settings."),
 ]
 
 
@@ -144,7 +142,11 @@ def main() -> None:
 
     doc.add_heading("Figures", level=1)
     fig_dir = ROOT / "final_figures"
-    for fig_name in sorted(FIGURE_CAPTIONS.keys(), key=lambda x: [int(s) if s.isdigit() else s for s in x.replace('.png','').replace('figure','').replace('_',' ').split()]):
+    def _fig_sort_key(name: str):
+        import re as _re
+        parts = _re.split(r'(\d+)', name.replace('.png','').replace('figure','').replace('supplementary_','99_'))
+        return [int(p) if p.isdigit() else p for p in parts]
+    for fig_name in sorted(FIGURE_CAPTIONS.keys(), key=_fig_sort_key):
         fig_path = fig_dir / fig_name
         if fig_path.exists():
             add_figure(doc, fig_path, FIGURE_CAPTIONS[fig_name])
@@ -157,10 +159,10 @@ def main() -> None:
 
     delong = ROOT / "results_summary" / "advanced_delong_tests.json"
     if delong.exists():
-        add_json_table(doc, json.loads(delong.read_text(encoding="utf-8")), "Table 8. DeLong test results comparing deep-learning AUC against Random Forest.")
+        add_json_table(doc, json.loads(delong.read_text(encoding="utf-8")), "Table 9. DeLong test results (macro-OvR AUC) comparing deep-learning models against Random Forest.")
 
     doc.add_heading("Figure Legends", level=1)
-    for k in sorted(FIGURE_CAPTIONS.keys()):
+    for k in sorted(FIGURE_CAPTIONS.keys(), key=_fig_sort_key):
         doc.add_paragraph(FIGURE_CAPTIONS[k])
 
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
