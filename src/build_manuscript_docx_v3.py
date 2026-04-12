@@ -161,9 +161,6 @@ def main() -> None:
     if delong.exists():
         add_json_table(doc, json.loads(delong.read_text(encoding="utf-8")), "Table 9. DeLong test results (macro-OvR AUC) comparing deep-learning models against Random Forest.")
 
-    doc.add_heading("Figure Legends", level=1)
-    for k in sorted(FIGURE_CAPTIONS.keys(), key=_fig_sort_key):
-        doc.add_paragraph(FIGURE_CAPTIONS[k])
 
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     doc.save(OUTPUT_PATH)
