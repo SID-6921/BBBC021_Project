@@ -88,6 +88,11 @@ FEATURE_COLS = [
     "large_spot_fraction",
 ]
 
+# BBBC021 channel order as returned by load_multichannel_image / get_channel_columns
+# (DAPI=nuclei/DNA, Tubulin, Actin -- always exactly 3 channels for this dataset).
+CHANNEL_NAMES = ["dapi", "tubulin", "actin"]
+FEATURE_COLS_PER_CHANNEL = [f"{ch}_{f}" for ch in CHANNEL_NAMES for f in FEATURE_COLS]
+
 
 @dataclass
 class ModelResult:
@@ -97,6 +102,7 @@ class ModelResult:
     train_time_sec: float
     peak_memory_mb: float
     used_pretrained: bool = False
+    loss_history: dict | None = None
 
 
 class GrayDataset(Dataset):
@@ -112,10 +118,10 @@ class GrayDataset(Dataset):
 
 
 class TinyCNNMulti(nn.Module):
-    def __init__(self, n_classes: int):
+    def __init__(self, n_classes: int, in_channels: int = 3):
         super().__init__()
         self.features = nn.Sequential(
-            nn.Conv2d(1, 16, 3, padding=1),
+            nn.Conv2d(in_channels, 16, 3, padding=1),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(2),
             nn.Conv2d(16, 32, 3, padding=1),
@@ -267,21 +273,35 @@ def collect_rows(meta: pd.DataFrame, images_dir: Path, target_total: int = 1600)
     return rows[:target_total]
 
 
-def extract_feature_record(image_id: str, row: pd.Series, fused: np.ndarray, config: dict) -> dict:
-    img_detect = clean_image(normalize_image(resize_image(fused, (256, 256))))
-    det = detect_spots(img_detect, **config)
-    feat = compute_features(
-        image_gray=img_detect,
-        mask=det["mask"],
-        spot_count=det["spot_count"],
-        image_id=image_id,
-        group=str(row.get("class_name", "unknown")),
-        spots=det.get("spots", []),
-    )
-    feat["class_name"] = str(row.get("class_name", "unknown"))
-    feat["compound"] = str(row.get("Image_Metadata_Compound", "unknown"))
-    feat["concentration"] = float(row.get("Image_Metadata_Concentration", np.nan))
-    feat["batch_name"] = infer_batch_name(row)
+def extract_feature_record_per_channel(image_id: str, row: pd.Series, channels: list[np.ndarray], config: dict) -> dict:
+    """Per-channel counterpart to extract_feature_record: runs detection and feature
+    computation independently on each of the 3 raw fluorescence channels (DAPI,
+    Tubulin, Actin) instead of on a fused grayscale image. Fusing channels before
+    feature extraction discards exactly the information (which channel changed)
+    that distinguishes MOA classes such as microtubule destabilizers/stabilizers vs.
+    actin disruptors vs. DNA-damaging agents; this keeps each channel's morphology
+    separately auditable.
+    """
+    feat: dict = {
+        "image_id": image_id,
+        "class_name": str(row.get("class_name", "unknown")),
+        "compound": str(row.get("Image_Metadata_Compound", "unknown")),
+        "concentration": float(row.get("Image_Metadata_Concentration", np.nan)),
+        "batch_name": infer_batch_name(row),
+    }
+    for ch_name, ch_img in zip(CHANNEL_NAMES, channels):
+        img_detect = clean_image(normalize_image(resize_image(ch_img, (256, 256))))
+        det = detect_spots(img_detect, **config)
+        ch_feat = compute_features(
+            image_gray=img_detect,
+            mask=det["mask"],
+            spot_count=det["spot_count"],
+            image_id=image_id,
+            group=str(row.get("class_name", "unknown")),
+            spots=det.get("spots", []),
+        )
+        for f in FEATURE_COLS:
+            feat[f"{ch_name}_{f}"] = ch_feat[f]
     return feat
 
 
@@ -291,20 +311,103 @@ def build_dataset(rows: list[tuple[int, pd.Series]], images_dir: Path, config: d
 
     for idx, row in rows:
         image_id = f"image_{idx:05d}"
-        fused, _ = load_multichannel_image(row, images_dir)
+        fused, channels = load_multichannel_image(row, images_dir)
 
-        records.append(extract_feature_record(image_id, row, fused, config))
+        records.append(extract_feature_record_per_channel(image_id, row, channels, config))
 
-        img_dl = clean_image(normalize_image(resize_image(fused, (dl_size, dl_size))))
-        images.append(img_dl.astype(np.float32) / 255.0)
+        # Genuine 3-channel input for CNN/ResNet (DAPI/Tubulin/Actin stacked), not a
+        # fused-then-repeated grayscale image -- same rationale as the per-channel
+        # hand-crafted features above.
+        ch_resized = [clean_image(normalize_image(resize_image(c, (dl_size, dl_size)))) for c in channels]
+        while len(ch_resized) < 3:
+            ch_resized.append(ch_resized[-1])
+        img_dl = np.stack(ch_resized[:3], axis=0).astype(np.float32) / 255.0
+        images.append(img_dl)
 
     return pd.DataFrame(records), np.stack(images, axis=0)
 
 
 def split_indices(y: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Legacy image-level stratified split. Kept only for reference/regression checks.
+
+    NOT used by run() any more: a plain image-level split lets sibling fields from the
+    same well/compound appear in both train and test, which a pretrained CNN operating
+    on raw pixels can exploit directly (reviewer-identified leakage). Use
+    split_indices_grouped() instead.
+    """
     idx_all = np.arange(len(y))
     idx_train, idx_test = train_test_split(idx_all, test_size=0.20, random_state=SEED, stratify=y)
     idx_train, idx_val = train_test_split(idx_train, test_size=0.15, random_state=SEED, stratify=y[idx_train])
+    return idx_train, idx_val, idx_test
+
+
+def split_indices_grouped(
+    df: pd.DataFrame, y: np.ndarray, group_col: str = "compound", seed: int = SEED
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Compound-level grouped split: every image of a given compound goes entirely into
+    train, val, or test, never split across partitions.
+
+    Allocation is done per-class rather than via a single global stratified split,
+    because BBBC021 MOA classes vary widely in how many distinct compounds they
+    contain; a handful of classes have only 2-4 compounds, and a blind stratified
+    split at the compound level can leave a class with zero compounds in test (or
+    val), which breaks multiclass AUC (roc_auc_score requires every class present in
+    y_true). Per class, compounds are shuffled and greedily assigned train/val/test
+    targeting ~65/15/20% of that class's compounds, but every class with >=3
+    compounds is guaranteed >=1 compound in val and >=1 in test; a class with exactly
+    2 compounds gets 1 train + 1 test (no val representation for that class); a class
+    with exactly 1 compound has no group-safe way to appear in more than one split
+    and is kept entirely in train (logged so it's visible, not silently dropped).
+    """
+    idx_all = np.arange(len(y))
+    groups = df[group_col].astype(str).values
+    rng = np.random.default_rng(seed)
+
+    compound_to_class: dict[str, int] = {}
+    for c in np.unique(groups):
+        mask = groups == c
+        vals, counts = np.unique(y[mask], return_counts=True)
+        compound_to_class[c] = int(vals[np.argmax(counts)])
+
+    class_to_compounds: dict[int, list[str]] = {}
+    for c, cls in compound_to_class.items():
+        class_to_compounds.setdefault(cls, []).append(c)
+
+    train_set: set[str] = set()
+    val_set: set[str] = set()
+    test_set: set[str] = set()
+    single_compound_classes: list[int] = []
+
+    for cls in sorted(class_to_compounds.keys()):
+        compounds = np.array(sorted(class_to_compounds[cls]))
+        rng.shuffle(compounds)
+        n = len(compounds)
+        if n == 1:
+            train_set.add(compounds[0])
+            single_compound_classes.append(cls)
+        elif n == 2:
+            train_set.add(compounds[0])
+            test_set.add(compounds[1])
+        else:
+            n_test = max(1, round(n * 0.20))
+            n_val = max(1, round(n * 0.15))
+            if n_test + n_val >= n:
+                n_val = 1
+                n_test = 1
+            test_set.update(compounds[:n_test])
+            val_set.update(compounds[n_test:n_test + n_val])
+            train_set.update(compounds[n_test + n_val:])
+
+    if single_compound_classes:
+        print(
+            f"[split_indices_grouped] WARNING: classes {single_compound_classes} have only "
+            "1 distinct compound each and cannot be group-split; kept entirely in train "
+            "(absent from val/test, so per-class metrics for these classes are undefined)."
+        )
+
+    idx_train = idx_all[[g in train_set for g in groups]]
+    idx_val = idx_all[[g in val_set for g in groups]]
+    idx_test = idx_all[[g in test_set for g in groups]]
     return idx_train, idx_val, idx_test
 
 
@@ -320,7 +423,7 @@ def train_multiclass_model(
     epochs: int,
     lr: float,
     optimizer_params: list[torch.nn.Parameter] | None = None,
-) -> tuple[float, float]:
+) -> tuple[float, float, dict[str, list[float]]]:
     criterion = nn.CrossEntropyLoss()
     params = optimizer_params if optimizer_params is not None else list(model.parameters())
     optimizer = torch.optim.Adam(params, lr=lr)
@@ -328,9 +431,11 @@ def train_multiclass_model(
     proc = psutil.Process()
     peak = get_peak_rss_mb(proc)
     t0 = time.perf_counter()
+    history: dict[str, list[float]] = {"train_loss": [], "val_loss": []}
 
     for _ in range(epochs):
         model.train()
+        running_train_loss, n_train = 0.0, 0
         for xb, yb in train_loader:
             xb, yb = xb.to(device), yb.to(device)
             optimizer.zero_grad()
@@ -338,16 +443,26 @@ def train_multiclass_model(
             loss = criterion(logits, yb)
             loss.backward()
             optimizer.step()
+            running_train_loss += float(loss.item()) * len(xb)
+            n_train += len(xb)
             peak = max(peak, get_peak_rss_mb(proc))
 
         model.eval()
+        running_val_loss, n_val = 0.0, 0
         with torch.no_grad():
-            for xb, _ in val_loader:
-                _ = model(xb.to(device))
+            for xb, yb in val_loader:
+                xb, yb = xb.to(device), yb.to(device)
+                logits = model(xb)
+                val_loss = criterion(logits, yb)
+                running_val_loss += float(val_loss.item()) * len(xb)
+                n_val += len(xb)
                 peak = max(peak, get_peak_rss_mb(proc))
 
+        history["train_loss"].append(running_train_loss / max(n_train, 1))
+        history["val_loss"].append(running_val_loss / max(n_val, 1))
+
     elapsed = time.perf_counter() - t0
-    return float(elapsed), float(peak)
+    return float(elapsed), float(peak), history
 
 
 def predict_proba_multiclass(model: nn.Module, loader: DataLoader, device: torch.device) -> np.ndarray:
@@ -372,14 +487,12 @@ def run_resnet_training(
 ) -> tuple[ModelResult, float]:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    # ResNet expects 3-channel 224x224 images
-    x_train3 = np.repeat(np.expand_dims(x_train, 1), 3, axis=1)
-    x_val3 = np.repeat(np.expand_dims(x_val, 1), 3, axis=1)
-    x_test3 = np.repeat(np.expand_dims(x_test, 1), 3, axis=1)
-
-    train_ds = GrayDataset(x_train3, y_train)
-    val_ds = GrayDataset(x_val3, y_val)
-    test_ds = GrayDataset(x_test3, y_test)
+    # x_train/x_val/x_test are already genuine 3-channel (DAPI/Tubulin/Actin) stacks
+    # from build_dataset, not a fused grayscale image repeated 3x -- ResNet's stem
+    # expects 3 channels natively, so no further reshaping is needed.
+    train_ds = GrayDataset(x_train, y_train)
+    val_ds = GrayDataset(x_val, y_val)
+    test_ds = GrayDataset(x_test, y_test)
 
     train_loader = DataLoader(train_ds, batch_size=BATCH_SIZE, shuffle=True)
     val_loader = DataLoader(val_ds, batch_size=BATCH_SIZE, shuffle=False)
@@ -393,7 +506,7 @@ def run_resnet_training(
             p.requires_grad = False
         for p in model.model.fc.parameters():
             p.requires_grad = True
-        t1, peak1 = train_multiclass_model(
+        t1, peak1, hist1 = train_multiclass_model(
             model,
             train_loader,
             val_loader,
@@ -411,7 +524,7 @@ def run_resnet_training(
                 p.requires_grad = False
 
         trainable = [p for p in model.parameters() if p.requires_grad]
-        t2, peak2 = train_multiclass_model(
+        t2, peak2, hist2 = train_multiclass_model(
             model,
             train_loader,
             val_loader,
@@ -422,13 +535,22 @@ def run_resnet_training(
         )
         elapsed = t1 + t2
         peak = max(peak1, peak2)
+        history = {
+            "train_loss": hist1["train_loss"] + hist2["train_loss"],
+            "val_loss": hist1["val_loss"] + hist2["val_loss"],
+            "stage_boundary_epoch": RESNET_HEAD_EPOCHS,
+        }
     else:
-        elapsed, peak = train_multiclass_model(
+        # Total epoch budget matched to the pretrained variant (head-stage epochs +
+        # fine-tune-stage epochs = 16) so the scratch-vs-pretrained comparison isn't
+        # confounded by the scratch model simply seeing fewer gradient updates.
+        total_epochs = RESNET_HEAD_EPOCHS + RESNET_FINETUNE_EPOCHS
+        elapsed, peak, history = train_multiclass_model(
             model,
             train_loader,
             val_loader,
             device,
-            epochs=RESNET_HEAD_EPOCHS,
+            epochs=total_epochs,
             lr=LEARNING_RATE,
         )
 
@@ -441,6 +563,7 @@ def run_resnet_training(
         train_time_sec=elapsed,
         peak_memory_mb=peak,
         used_pretrained=pretrained,
+        loss_history=history,
     ), float(accuracy_score(y_test, pred))
 
 
@@ -455,16 +578,17 @@ def run_cnn_training(
 ) -> ModelResult:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    train_ds = GrayDataset(np.expand_dims(x_train, 1), y_train)
-    val_ds = GrayDataset(np.expand_dims(x_val, 1), y_val)
-    test_ds = GrayDataset(np.expand_dims(x_test, 1), y_test)
+    # x_train/x_val/x_test are genuine 3-channel (DAPI/Tubulin/Actin) stacks.
+    train_ds = GrayDataset(x_train, y_train)
+    val_ds = GrayDataset(x_val, y_val)
+    test_ds = GrayDataset(x_test, y_test)
 
     train_loader = DataLoader(train_ds, batch_size=BATCH_SIZE, shuffle=True)
     val_loader = DataLoader(val_ds, batch_size=BATCH_SIZE, shuffle=False)
     test_loader = DataLoader(test_ds, batch_size=BATCH_SIZE, shuffle=False)
 
-    model = TinyCNNMulti(n_classes=n_classes).to(device)
-    elapsed, peak = train_multiclass_model(model, train_loader, val_loader, device, epochs=CNN_EPOCHS, lr=LEARNING_RATE)
+    model = TinyCNNMulti(n_classes=n_classes, in_channels=3).to(device)
+    elapsed, peak, history = train_multiclass_model(model, train_loader, val_loader, device, epochs=CNN_EPOCHS, lr=LEARNING_RATE)
 
     proba = predict_proba_multiclass(model, test_loader, device)
     pred = np.argmax(proba, axis=1)
@@ -475,6 +599,7 @@ def run_cnn_training(
         train_time_sec=elapsed,
         peak_memory_mb=peak,
         used_pretrained=False,
+        loss_history=history,
     )
 
 
@@ -507,8 +632,22 @@ def fit_classical_models(x_train: pd.DataFrame, y_train: np.ndarray) -> tuple[Pi
 
 
 def multiclass_auc(y_true: np.ndarray, y_prob: np.ndarray) -> float:
-    # Pass 1-D y_true directly; sklearn handles OvR binarization internally.
-    return float(roc_auc_score(y_true, y_prob, average="macro", multi_class="ovr"))
+    # A class absent from y_true entirely (possible for a class with only 1
+    # group-split-able compound, kept entirely in train by split_indices_grouped)
+    # makes sklearn's average="macro" return NaN silently rather than raise, because
+    # AUC is undefined for a class with zero positive examples. We therefore compute
+    # per-class OvR AUC with average=None and take the mean only over classes that
+    # are actually present, so the reported macro-AUC reflects only classes that were
+    # genuinely evaluable on this split (matches the averaging already done inside
+    # delong_test_multiclass_macro). Absent classes must be reported separately as
+    # "not evaluable on this split" -- never silently dropped from the manuscript.
+    n_classes = y_prob.shape[1]
+    present = np.unique(y_true)
+    if len(present) < 2:
+        return float("nan")
+    y_bin = label_binarize(y_true, classes=list(range(n_classes)))
+    per_class = roc_auc_score(y_bin[:, present], y_prob[:, present], average=None, multi_class="ovr")
+    return float(np.mean(per_class))
 
 
 def per_class_auc(y_true: np.ndarray, y_prob: np.ndarray, class_names: list[str]) -> dict[str, float]:
@@ -647,9 +786,68 @@ def delong_test_multiclass_macro(y_true: np.ndarray, p1: np.ndarray, p2: np.ndar
     }
 
 
+def paired_bootstrap_auc_test(
+    y_true: np.ndarray, p1: np.ndarray, p2: np.ndarray, n_boot: int = 2000, seed: int = SEED
+) -> dict[str, float]:
+    """Paired bootstrap on macro-AUC difference between two models on the same test
+    set, resampling test images (with replacement) while keeping the model pairing
+    intact for each resample. Replaces delong_test_multiclass_macro as the primary
+    statistical comparison: DeLong's variance estimator assumes a single pair of
+    correlated binary ROC curves, and its extension here to a macro-averaged,
+    highly-imbalanced 10-class OvR quantity with unmodelled between-class
+    correlation is not something the classical DeLong procedure was derived for
+    (reviewer-identified issue). This does not account for compound/experimental-unit
+    non-independence within the test set (that would additionally require resampling
+    whole compounds, not images) -- see biological_validation for the compound-level
+    analysis.
+    """
+    rng = np.random.default_rng(seed)
+    n = len(y_true)
+    obs = multiclass_auc(y_true, p1) - multiclass_auc(y_true, p2)
+
+    diffs = []
+    for _ in range(n_boot):
+        idx = rng.integers(0, n, n)
+        yt, pa, pb = y_true[idx], p1[idx], p2[idx]
+        if len(np.unique(yt)) < 2:
+            continue
+        try:
+            diffs.append(multiclass_auc(yt, pa) - multiclass_auc(yt, pb))
+        except ValueError:
+            continue
+    diffs = np.array(diffs)
+    ci_lo, ci_hi = np.percentile(diffs, [2.5, 97.5])
+    # Two-sided bootstrap p-value via the standard percentile-bootstrap significance
+    # test: the fraction of the bootstrap distribution that crosses zero, doubled.
+    # (The earlier centered/recentered formulation here was a bug -- it always
+    # returned p~1 regardless of how far the CI was from zero, since obs is by
+    # construction close to the bootstrap distribution's own mean.)
+    if len(diffs):
+        p_value = float(2 * min(np.mean(diffs <= 0), np.mean(diffs >= 0)))
+        p_value = min(p_value, 1.0)
+    else:
+        p_value = float("nan")
+
+    return {
+        "auc_model_1": float(multiclass_auc(y_true, p1)),
+        "auc_model_2": float(multiclass_auc(y_true, p2)),
+        "auc_diff": float(obs),
+        "ci_95_low": float(ci_lo),
+        "ci_95_high": float(ci_hi),
+        "p_value_bootstrap": p_value,
+        "n_boot_valid": int(len(diffs)),
+    }
+
+
 def save_confusion_matrix(y_true: np.ndarray, y_pred: np.ndarray, labels: list[str], out_path: Path, title: str) -> None:
     fig, ax = plt.subplots(figsize=(10.5, 9))
-    ConfusionMatrixDisplay.from_predictions(y_true, y_pred, display_labels=labels, xticks_rotation=45, cmap="Blues", ax=ax, colorbar=False)
+    # Explicit `labels=range(len(labels))` keeps the tick count fixed at the full class
+    # list even when a class is absent from y_true/y_pred for this split (can happen
+    # for a class with only 1 group-splittable compound, kept entirely in train).
+    ConfusionMatrixDisplay.from_predictions(
+        y_true, y_pred, labels=list(range(len(labels))), display_labels=labels,
+        xticks_rotation=45, cmap="Blues", ax=ax, colorbar=False,
+    )
     ax.set_title(title)
     plt.tight_layout()
     plt.savefig(out_path, dpi=180)
@@ -676,32 +874,62 @@ def save_calibration_plot(y_true: np.ndarray, probs: dict[str, np.ndarray], out_
     return pd.DataFrame(rows)
 
 
-def save_pca_batch_effects(df: pd.DataFrame, out_before: Path, out_after: Path) -> None:
-    x_before = StandardScaler().fit_transform(df[FEATURE_COLS])
-    p_before = PCA(n_components=2, random_state=SEED).fit_transform(x_before)
-    plt.figure(figsize=(8, 6))
-    sns.scatterplot(x=p_before[:, 0], y=p_before[:, 1], hue=df["batch_name"], s=25)
-    plt.title("PCA Batch Effects Before Normalization")
-    plt.tight_layout()
-    plt.savefig(out_before, dpi=180)
-    plt.close()
+def save_pca_batch_effects(df: pd.DataFrame, out_before: Path, out_after: Path) -> dict:
+    """Also returns a quantified before/after batch-effect summary (silhouette score
+    on batch labels in PCA space, and a simple batch-classifier AUC), rather than
+    relying on visual inspection of the scatter alone (reviewer-identified gap).
+    Axis labels include %-variance-explained for PC1/PC2, and the batch legend is
+    sorted so Week1/Week2/Week3 aren't interleaved.
+    """
+    from sklearn.metrics import silhouette_score
+    from sklearn.model_selection import cross_val_score
+
+    batch_order = sorted(df["batch_name"].unique())
+
+    def _plot_and_score(x: np.ndarray, batch_labels: pd.Series, out_path: Path, title: str) -> dict:
+        pca = PCA(n_components=2, random_state=SEED)
+        p = pca.fit_transform(x)
+        var_pct = pca.explained_variance_ratio_ * 100
+
+        fig, ax = plt.subplots(figsize=(8, 6))
+        sns.scatterplot(x=p[:, 0], y=p[:, 1], hue=batch_labels, hue_order=batch_order, s=25, ax=ax)
+        ax.set_xlabel(f"PC1 ({var_pct[0]:.1f}% variance explained)")
+        ax.set_ylabel(f"PC2 ({var_pct[1]:.1f}% variance explained)")
+        ax.set_title(title)
+        ax.legend(title="batch_name", bbox_to_anchor=(1.02, 1), loc="upper left", fontsize=8)
+        plt.tight_layout()
+        plt.savefig(out_path, dpi=180)
+        plt.close()
+
+        sil = float(silhouette_score(p, batch_labels)) if batch_labels.nunique() > 1 else float("nan")
+        # Batch-predictability AUC: how well can a simple classifier recover batch
+        # identity from the (PCA-reduced) features? Lower is better (less batch signal).
+        try:
+            clf = RandomForestClassifier(n_estimators=200, random_state=SEED)
+            batch_codes = batch_labels.astype("category").cat.codes.values
+            cv_scores = cross_val_score(clf, p, batch_codes, cv=3, scoring="accuracy")
+            batch_pred_acc = float(np.mean(cv_scores))
+        except Exception:
+            batch_pred_acc = float("nan")
+
+        return {"silhouette_on_batch": sil, "batch_predictability_accuracy": batch_pred_acc,
+                "pc1_pct_var": float(var_pct[0]), "pc2_pct_var": float(var_pct[1])}
+
+    x_before = StandardScaler().fit_transform(df[FEATURE_COLS_PER_CHANNEL])
+    metrics_before = _plot_and_score(x_before, df["batch_name"], out_before, "PCA Batch Effects Before Normalization")
 
     df_norm = df.copy()
-    df_norm[FEATURE_COLS] = df_norm[FEATURE_COLS].astype(float)
+    df_norm[FEATURE_COLS_PER_CHANNEL] = df_norm[FEATURE_COLS_PER_CHANNEL].astype(float)
     for b, bdf in df_norm.groupby("batch_name"):
         idx = bdf.index
-        mu = bdf[FEATURE_COLS].mean()
-        sd = bdf[FEATURE_COLS].std(ddof=0).replace(0, 1.0)
-        df_norm.loc[idx, FEATURE_COLS] = (bdf[FEATURE_COLS] - mu) / sd
+        mu = bdf[FEATURE_COLS_PER_CHANNEL].mean()
+        sd = bdf[FEATURE_COLS_PER_CHANNEL].std(ddof=0).replace(0, 1.0)
+        df_norm.loc[idx, FEATURE_COLS_PER_CHANNEL] = (bdf[FEATURE_COLS_PER_CHANNEL] - mu) / sd
 
-    x_after = StandardScaler().fit_transform(df_norm[FEATURE_COLS])
-    p_after = PCA(n_components=2, random_state=SEED).fit_transform(x_after)
-    plt.figure(figsize=(8, 6))
-    sns.scatterplot(x=p_after[:, 0], y=p_after[:, 1], hue=df_norm["batch_name"], s=25)
-    plt.title("PCA Batch Effects After Normalization")
-    plt.tight_layout()
-    plt.savefig(out_after, dpi=180)
-    plt.close()
+    x_after = StandardScaler().fit_transform(df_norm[FEATURE_COLS_PER_CHANNEL])
+    metrics_after = _plot_and_score(x_after, df_norm["batch_name"], out_after, "PCA Batch Effects After Normalization")
+
+    return {"before": metrics_before, "after": metrics_after}
 
 
 def nested_cv_assessment(x_train: pd.DataFrame, y_train: np.ndarray) -> pd.DataFrame:
@@ -732,25 +960,72 @@ def nested_cv_assessment(x_train: pd.DataFrame, y_train: np.ndarray) -> pd.DataF
     return pd.DataFrame(rows)
 
 
+def _dedup_collinear_features(cols: list[str]) -> list[str]:
+    """Drop features that are exactly linearly dependent on another feature already
+    kept, within a fixed-size image: total_intensity is mean_intensity * pixel count,
+    and density_spots_per_10k_px is spot_count * a constant, per channel. Ablation
+    "removing N features" should remove N independent quantities, not N names that
+    collapse to fewer independent degrees of freedom (reviewer-identified issue).
+    """
+    drop_if_present = {"total_intensity": "mean_intensity", "density_spots_per_10k_px": "spot_count"}
+    kept = []
+    for c in cols:
+        base_col = c.split("_", 1)[1] if "_" in c else c
+        redundant_base = None
+        for redundant, keeper in drop_if_present.items():
+            if base_col == redundant:
+                ch = c.split("_", 1)[0]
+                if f"{ch}_{keeper}" in cols:
+                    redundant_base = redundant
+                break
+        if redundant_base is None:
+            kept.append(c)
+    return kept
+
+
 def feature_ablation(rf_model: Pipeline, x_train: pd.DataFrame, y_train: np.ndarray, x_test: pd.DataFrame, y_test: np.ndarray) -> pd.DataFrame:
     base = multiclass_auc(y_test, rf_model.predict_proba(x_test))
-    imp = pd.Series(rf_model.named_steps["model"].feature_importances_, index=FEATURE_COLS).sort_values(ascending=False)
+    imp_full = pd.Series(rf_model.named_steps["model"].feature_importances_, index=FEATURE_COLS_PER_CHANNEL).sort_values(ascending=False)
+
+    independent_cols = _dedup_collinear_features(FEATURE_COLS_PER_CHANNEL)
+    imp = imp_full[independent_cols].sort_values(ascending=False)
 
     rows = [{"ablation": "none", "n_removed": 0, "test_auc": float(base), "auc_drop_vs_base": 0.0, "removed_features": ""}]
     for k in [1, 2, 3, 5, 8]:
         rem = imp.index[:k].tolist()
-        keep = [c for c in FEATURE_COLS if c not in rem]
+        # Also drop any feature collinear WITH a removed one, so "removed" always
+        # means the collinear pair leaves together (can't test a model with
+        # mean_intensity gone but total_intensity -- its exact linear rescaling --
+        # still present).
+        drop_if_present = {"total_intensity": "mean_intensity", "density_spots_per_10k_px": "spot_count"}
+        rem_set = set(rem)
+        for c in rem:
+            ch, base_col = c.split("_", 1)
+            for redundant, keeper in drop_if_present.items():
+                if base_col == keeper and f"{ch}_{redundant}" in FEATURE_COLS_PER_CHANNEL:
+                    rem_set.add(f"{ch}_{redundant}")
+        keep = [c for c in FEATURE_COLS_PER_CHANNEL if c not in rem_set]
         model = Pipeline([
             ("imputer", SimpleImputer(strategy="median")),
             ("model", RandomForestClassifier(n_estimators=450, random_state=SEED, class_weight="balanced_subsample")),
         ])
         model.fit(x_train[keep], y_train)
         auc = multiclass_auc(y_test, model.predict_proba(x_test[keep]))
-        rows.append({"ablation": f"remove_top_{k}", "n_removed": k, "test_auc": float(auc), "auc_drop_vs_base": float(base - auc), "removed_features": ",".join(rem)})
+        rows.append({
+            "ablation": f"remove_top_{k}_independent", "n_removed": k, "n_removed_incl_collinear": len(rem_set),
+            "test_auc": float(auc), "auc_drop_vs_base": float(base - auc), "removed_features": ",".join(sorted(rem_set)),
+        })
     return pd.DataFrame(rows)
 
 
 def biological_validation(df: pd.DataFrame, top_features: list[str]) -> pd.DataFrame:
+    """Kruskal-Wallis across MOA classes is computed as before. The dose-response
+    correlation is now computed WITHIN each compound separately and then summarized
+    (median rho, fraction of compounds with a consistent-sign correlation), instead
+    of pooling concentration across compounds of very different potency (reviewer-
+    identified issue: 1 uM of a potent destabilizer and 1 uM of a weak agent are not
+    comparable exposures, so a single pooled correlation is not interpretable).
+    """
     rows = []
     for feat in top_features:
         sub = df[[feat, "compound", "concentration", "class_name"]].dropna()
@@ -760,23 +1035,33 @@ def biological_validation(df: pd.DataFrame, top_features: list[str]) -> pd.DataF
         else:
             h, p_kw = np.nan, np.nan
 
-        if sub["concentration"].nunique() > 2:
-            rho, p_s = spearmanr(sub[feat], sub["concentration"], nan_policy="omit")
+        within_compound_rhos = []
+        for _, cdf in sub.groupby("compound"):
+            if cdf["concentration"].nunique() >= 3 and len(cdf) >= 5:
+                rho_c, _ = spearmanr(cdf[feat], cdf["concentration"], nan_policy="omit")
+                if not np.isnan(rho_c):
+                    within_compound_rhos.append(rho_c)
+
+        if within_compound_rhos:
+            median_rho = float(np.median(within_compound_rhos))
+            frac_consistent_sign = float(np.mean(np.sign(within_compound_rhos) == np.sign(median_rho))) if median_rho != 0 else float("nan")
+            n_compounds_tested = len(within_compound_rhos)
         else:
-            rho, p_s = np.nan, np.nan
+            median_rho, frac_consistent_sign, n_compounds_tested = np.nan, np.nan, 0
 
         rows.append({
             "feature": feat,
             "kruskal_h": float(h) if not np.isnan(h) else np.nan,
             "kruskal_p": float(p_kw) if not np.isnan(p_kw) else np.nan,
-            "spearman_rho_vs_concentration": float(rho) if not np.isnan(rho) else np.nan,
-            "spearman_p": float(p_s) if not np.isnan(p_s) else np.nan,
+            "within_compound_median_spearman_rho": median_rho,
+            "within_compound_frac_consistent_sign": frac_consistent_sign,
+            "n_compounds_with_dose_response_tested": n_compounds_tested,
         })
     return pd.DataFrame(rows)
 
 
 def save_feature_correlation(df: pd.DataFrame, out_path: Path) -> None:
-    corr = df[FEATURE_COLS].corr(method="spearman")
+    corr = df[FEATURE_COLS_PER_CHANNEL].corr(method="spearman")
     plt.figure(figsize=(10, 8))
     sns.heatmap(corr, cmap="coolwarm", center=0, square=True)
     plt.title("Supplementary Figure S1. Spearman Feature Correlation Matrix")
@@ -815,8 +1100,8 @@ def run_robustness_same_split(
         feat_records = []
         for idx, row in rows:
             image_id = f"image_{idx:05d}"
-            fused, _ = load_multichannel_image(row, images_dir)
-            rec = extract_feature_record(image_id, row, fused, cfg)
+            _, channels = load_multichannel_image(row, images_dir)
+            rec = extract_feature_record_per_channel(image_id, row, channels, cfg)
             rec["split"] = split_map.get(image_id, "")
             rec["label_idx"] = class_to_idx.get(rec["class_name"], -1)
             feat_records.append(rec)
@@ -826,9 +1111,9 @@ def run_robustness_same_split(
 
         train_df = rdf[rdf["split"] == "train"]
         test_df = rdf[rdf["split"] == "test"]
-        x_tr = train_df[FEATURE_COLS]
+        x_tr = train_df[FEATURE_COLS_PER_CHANNEL]
         y_tr = train_df["label_idx"].astype(int).values
-        x_te = test_df[FEATURE_COLS]
+        x_te = test_df[FEATURE_COLS_PER_CHANNEL]
         y_te = test_df["label_idx"].astype(int).values
 
         lr = Pipeline([
@@ -891,16 +1176,16 @@ def run(root: Path, target_total: int = 1600) -> None:
     class_to_idx = {c: i for i, c in enumerate(class_names)}
     y = df_default["class_name"].map(class_to_idx).astype(int).values
 
-    idx_train, idx_val, idx_test = split_indices(y)
+    idx_train, idx_val, idx_test = split_indices_grouped(df_default, y, group_col="compound")
     split_df = pd.DataFrame({"image_id": df_default["image_id"], "split": "unused"})
     split_df.loc[idx_train, "split"] = "train"
     split_df.loc[idx_val, "split"] = "val"
     split_df.loc[idx_test, "split"] = "test"
     split_df.to_csv(results_summary / "main_split_indices.csv", index=False)
 
-    x_train = df_default.iloc[idx_train][FEATURE_COLS]
+    x_train = df_default.iloc[idx_train][FEATURE_COLS_PER_CHANNEL]
     y_train = y[idx_train]
-    x_test = df_default.iloc[idx_test][FEATURE_COLS]
+    x_test = df_default.iloc[idx_test][FEATURE_COLS_PER_CHANNEL]
     y_test = y[idx_test]
 
     lr, rf, t_cls, m_cls = fit_classical_models(x_train, y_train)
@@ -911,6 +1196,32 @@ def run(root: Path, target_total: int = 1600) -> None:
     cnn_res = run_cnn_training(x_img[idx_train], y[idx_train], x_img[idx_val], y[idx_val], x_img[idx_test], y[idx_test], n_classes=len(class_names))
     res_scratch, _ = run_resnet_training(False, x_img[idx_train], y[idx_train], x_img[idx_val], y[idx_val], x_img[idx_test], y[idx_test], n_classes=len(class_names))
     res_pre, _ = run_resnet_training(True, x_img[idx_train], y[idx_train], x_img[idx_val], y[idx_val], x_img[idx_test], y[idx_test], n_classes=len(class_names))
+
+    # Loss curves from the ACTUAL trained models (CrossEntropyLoss, softmax over
+    # n_classes) -- replaces the old Supplementary Figure S7, which plotted loss from
+    # an unrelated, unused binary-classification script (deep_learning_pipeline.py,
+    # BCEWithLogitsLoss) that never produced any of the reported results.
+    for res, fname, title in [
+        (cnn_res, "figure_s7_cnn_loss_curves.png", "Compact CNN training/validation loss (CrossEntropyLoss, softmax, 10-class)"),
+        (res_scratch, "figure_s7b_resnet_scratch_loss_curves.png", "ResNet-18 (scratch) training/validation loss"),
+        (res_pre, "figure_s7c_resnet_pretrained_loss_curves.png", "ResNet-18 (pretrained) training/validation loss"),
+    ]:
+        if res.loss_history is None:
+            continue
+        plt.figure(figsize=(6, 4))
+        epochs_x = list(range(len(res.loss_history["train_loss"])))
+        plt.plot(epochs_x, res.loss_history["train_loss"], label="train loss")
+        plt.plot(epochs_x, res.loss_history["val_loss"], label="val loss")
+        boundary = res.loss_history.get("stage_boundary_epoch")
+        if boundary is not None:
+            plt.axvline(boundary - 0.5, color="gray", linestyle="--", linewidth=1, label="freeze -> fine-tune")
+        plt.xlabel("Epoch")
+        plt.ylabel("Cross-entropy loss")
+        plt.title(title)
+        plt.legend()
+        plt.tight_layout()
+        plt.savefig(final_figures / fname, dpi=180)
+        plt.close()
 
     model_probs = {
         "logistic_regression": lr_prob,
@@ -927,9 +1238,20 @@ def run(root: Path, target_total: int = 1600) -> None:
         "resnet18_pretrained": res_pre.pred_test,
     }
 
+    raw_preds_df = pd.DataFrame({"y_true": y_test, "y_true_class": [class_names[i] for i in y_test]})
+    for name, preds in model_preds.items():
+        raw_preds_df[f"pred_{name}"] = preds
+        raw_preds_df[f"pred_{name}_class"] = [class_names[i] for i in preds]
+    raw_preds_df.to_csv(results_summary / "raw_test_predictions.csv", index=False)
+
     metrics_df = evaluate_models_with_ci(y_test, class_names, model_probs, model_preds)
 
-    # DeLong tests
+    # Statistical comparison: paired bootstrap on macro-AUC difference is now the
+    # PRIMARY test (reviewer-requested replacement for DeLong, which is not valid for
+    # a macro-averaged, imbalanced 10-class OvR quantity). DeLong is retained
+    # alongside only for transparency/comparison, clearly labeled as secondary.
+    bootstrap_cnn_vs_rf = paired_bootstrap_auc_test(y_test, model_probs["cnn_scratch"], model_probs["random_forest"])
+    bootstrap_resnet_pre_vs_rf = paired_bootstrap_auc_test(y_test, model_probs["resnet18_pretrained"], model_probs["random_forest"])
     delong_cnn_vs_rf = delong_test_multiclass_macro(y_test, model_probs["cnn_scratch"], model_probs["random_forest"])
     delong_resnet_pre_vs_rf = delong_test_multiclass_macro(y_test, model_probs["resnet18_pretrained"], model_probs["random_forest"])
 
@@ -939,7 +1261,9 @@ def run(root: Path, target_total: int = 1600) -> None:
     save_confusion_matrix(y_test, model_preds["resnet18_pretrained"], class_names, final_figures / "figure13_confusion_matrix_resnet_pretrained_12class.png", "12-class Confusion Matrix - ResNet-18 Pretrained")
 
     ece_df = save_calibration_plot(y_test, model_probs, final_figures / "figure14_calibration_curves_multiclass.png")
-    save_pca_batch_effects(df_default, final_figures / "figure15_pca_batch_before.png", final_figures / "figure16_pca_batch_after.png")
+    batch_effect_metrics = save_pca_batch_effects(df_default, final_figures / "figure15_pca_batch_before.png", final_figures / "figure16_pca_batch_after.png")
+    with open(results_summary / "batch_effect_quantification.json", "w", encoding="utf-8") as f:
+        json.dump(batch_effect_metrics, f, indent=2)
 
     ablation_df = feature_ablation(rf, x_train, y_train, x_test, y_test)
     plt.figure(figsize=(8, 5))
@@ -953,7 +1277,7 @@ def run(root: Path, target_total: int = 1600) -> None:
 
     save_feature_correlation(df_default, final_figures / "supplementary_figure_s1_feature_correlation.png")
 
-    top_features = pd.Series(rf.named_steps["model"].feature_importances_, index=FEATURE_COLS).sort_values(ascending=False).head(6).index.tolist()
+    top_features = pd.Series(rf.named_steps["model"].feature_importances_, index=FEATURE_COLS_PER_CHANNEL).sort_values(ascending=False).head(6).index.tolist()
     bio_df = biological_validation(df_default, top_features)
     nested_df = nested_cv_assessment(x_train, y_train)
 
@@ -984,6 +1308,18 @@ def run(root: Path, target_total: int = 1600) -> None:
             {
                 "cnn_scratch_vs_random_forest": delong_cnn_vs_rf,
                 "resnet18_pretrained_vs_random_forest": delong_resnet_pre_vs_rf,
+            },
+            f,
+            indent=2,
+        )
+
+    # Primary statistical comparison (paired bootstrap; see paired_bootstrap_auc_test
+    # docstring for why this replaces DeLong as primary).
+    with open(results_summary / "bootstrap_auc_tests.json", "w", encoding="utf-8") as f:
+        json.dump(
+            {
+                "cnn_scratch_vs_random_forest": bootstrap_cnn_vs_rf,
+                "resnet18_pretrained_vs_random_forest": bootstrap_resnet_pre_vs_rf,
             },
             f,
             indent=2,

@@ -1,0 +1,329 @@
+y_true,y_true_class,pred_logistic_regression,pred_logistic_regression_class,pred_random_forest,pred_random_forest_class,pred_cnn_scratch,pred_cnn_scratch_class,pred_resnet18_scratch,pred_resnet18_scratch_class,pred_resnet18_pretrained,pred_resnet18_pretrained_class
+7,Microtubule stabilizers,6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,6,Microtubule destabilizers,4,DNA replication
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,0,Actin disruptors,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,2,DMSO,8,Protein degradation,5,Eg5 inhibitors,6,Microtubule destabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,6,Microtubule destabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,0,Actin disruptors,7,Microtubule stabilizers
+7,Microtubule stabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,7,Microtubule stabilizers
+7,Microtubule stabilizers,2,DMSO,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,8,Protein degradation,8,Protein degradation,5,Eg5 inhibitors,5,Eg5 inhibitors,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,8,Protein degradation
+7,Microtubule stabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,8,Protein degradation,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,8,Protein degradation
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,0,Actin disruptors,7,Microtubule stabilizers
+7,Microtubule stabilizers,6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,6,Microtubule destabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,2,DMSO,7,Microtubule stabilizers,5,Eg5 inhibitors
+7,Microtubule stabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,8,Protein degradation
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+7,Microtubule stabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,7,Microtubule stabilizers,6,Microtubule destabilizers
+7,Microtubule stabilizers,2,DMSO,7,Microtubule stabilizers,5,Eg5 inhibitors,6,Microtubule destabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,8,Protein degradation
+7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,5,Eg5 inhibitors,6,Microtubule destabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,6,Microtubule destabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,5,Eg5 inhibitors,6,Microtubule destabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,8,Protein degradation,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,0,Actin disruptors,7,Microtubule stabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,7,Microtubule stabilizers
+7,Microtubule stabilizers,6,Microtubule destabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,5,Eg5 inhibitors,6,Microtubule destabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,6,Microtubule destabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,6,Microtubule destabilizers,8,Protein degradation
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,0,Actin disruptors,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,0,Actin disruptors
+7,Microtubule stabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,0,Actin disruptors,7,Microtubule stabilizers
+7,Microtubule stabilizers,0,Actin disruptors,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,8,Protein degradation,8,Protein degradation,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,7,Microtubule stabilizers,8,Protein degradation
+7,Microtubule stabilizers,6,Microtubule destabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+7,Microtubule stabilizers,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,7,Microtubule stabilizers,7,Microtubule stabilizers
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,2,DMSO,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,9,Protein synthesis,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,2,DMSO,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers,5,Eg5 inhibitors
+6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,8,Protein degradation,6,Microtubule destabilizers
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers,5,Eg5 inhibitors
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors
+6,Microtubule destabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,2,DMSO,5,Eg5 inhibitors,5,Eg5 inhibitors
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,8,Protein degradation,6,Microtubule destabilizers
+6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers,6,Microtubule destabilizers
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers,6,Microtubule destabilizers
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors
+6,Microtubule destabilizers,6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors
+6,Microtubule destabilizers,6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,2,DMSO,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,2,DMSO,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors
+6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers,6,Microtubule destabilizers
+6,Microtubule destabilizers,2,DMSO,5,Eg5 inhibitors,5,Eg5 inhibitors,7,Microtubule stabilizers,5,Eg5 inhibitors
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors
+6,Microtubule destabilizers,6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,9,Protein synthesis,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors
+6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,7,Microtubule stabilizers,5,Eg5 inhibitors
+6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors
+6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors
+6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors
+6,Microtubule destabilizers,6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors
+6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,6,Microtubule destabilizers,5,Eg5 inhibitors
+6,Microtubule destabilizers,6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors
+6,Microtubule destabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,8,Protein degradation,6,Microtubule destabilizers
+6,Microtubule destabilizers,6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors
+6,Microtubule destabilizers,6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,5,Eg5 inhibitors,9,Protein synthesis,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,6,Microtubule destabilizers,9,Protein synthesis,5,Eg5 inhibitors,8,Protein degradation,6,Microtubule destabilizers
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,8,Protein degradation,6,Microtubule destabilizers
+6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers,5,Eg5 inhibitors
+6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors
+6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors
+6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,7,Microtubule stabilizers,6,Microtubule destabilizers
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,9,Protein synthesis,9,Protein synthesis,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,8,Protein degradation,6,Microtubule destabilizers
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,8,Protein degradation,5,Eg5 inhibitors
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,8,Protein degradation,6,Microtubule destabilizers
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,8,Protein degradation,6,Microtubule destabilizers
+6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,9,Protein synthesis,9,Protein synthesis,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors
+6,Microtubule destabilizers,7,Microtubule stabilizers,9,Protein synthesis,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+6,Microtubule destabilizers,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers
+1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+1,Aurora kinase inhibitors,2,DMSO,2,DMSO,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+1,Aurora kinase inhibitors,2,DMSO,2,DMSO,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+1,Aurora kinase inhibitors,2,DMSO,2,DMSO,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+0,Actin disruptors,2,DMSO,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,4,DNA replication
+0,Actin disruptors,2,DMSO,1,Aurora kinase inhibitors,2,DMSO,5,Eg5 inhibitors,1,Aurora kinase inhibitors
+0,Actin disruptors,2,DMSO,2,DMSO,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+0,Actin disruptors,2,DMSO,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+0,Actin disruptors,5,Eg5 inhibitors,5,Eg5 inhibitors,2,DMSO,1,Aurora kinase inhibitors,4,DNA replication
+0,Actin disruptors,9,Protein synthesis,5,Eg5 inhibitors,5,Eg5 inhibitors,0,Actin disruptors,6,Microtubule destabilizers
+0,Actin disruptors,5,Eg5 inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+0,Actin disruptors,5,Eg5 inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+0,Actin disruptors,0,Actin disruptors,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers,5,Eg5 inhibitors
+0,Actin disruptors,5,Eg5 inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,0,Actin disruptors
+0,Actin disruptors,2,DMSO,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+0,Actin disruptors,2,DMSO,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,0,Actin disruptors
+0,Actin disruptors,0,Actin disruptors,2,DMSO,2,DMSO,2,DMSO,0,Actin disruptors
+0,Actin disruptors,0,Actin disruptors,5,Eg5 inhibitors,5,Eg5 inhibitors,7,Microtubule stabilizers,0,Actin disruptors
+0,Actin disruptors,0,Actin disruptors,0,Actin disruptors,2,DMSO,2,DMSO,0,Actin disruptors
+0,Actin disruptors,0,Actin disruptors,0,Actin disruptors,5,Eg5 inhibitors,7,Microtubule stabilizers,0,Actin disruptors
+0,Actin disruptors,0,Actin disruptors,2,DMSO,2,DMSO,2,DMSO,0,Actin disruptors
+0,Actin disruptors,0,Actin disruptors,0,Actin disruptors,5,Eg5 inhibitors,0,Actin disruptors,0,Actin disruptors
+0,Actin disruptors,0,Actin disruptors,0,Actin disruptors,5,Eg5 inhibitors,0,Actin disruptors,0,Actin disruptors
+0,Actin disruptors,8,Protein degradation,0,Actin disruptors,5,Eg5 inhibitors,0,Actin disruptors,7,Microtubule stabilizers
+0,Actin disruptors,0,Actin disruptors,2,DMSO,2,DMSO,2,DMSO,0,Actin disruptors
+0,Actin disruptors,0,Actin disruptors,2,DMSO,2,DMSO,0,Actin disruptors,0,Actin disruptors
+0,Actin disruptors,0,Actin disruptors,0,Actin disruptors,2,DMSO,2,DMSO,0,Actin disruptors
+0,Actin disruptors,0,Actin disruptors,2,DMSO,2,DMSO,2,DMSO,0,Actin disruptors
+8,Protein degradation,4,DNA replication,4,DNA replication,5,Eg5 inhibitors,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+8,Protein degradation,8,Protein degradation,8,Protein degradation,5,Eg5 inhibitors,8,Protein degradation,4,DNA replication
+8,Protein degradation,8,Protein degradation,6,Microtubule destabilizers,5,Eg5 inhibitors,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+8,Protein degradation,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,6,Microtubule destabilizers,1,Aurora kinase inhibitors
+8,Protein degradation,6,Microtubule destabilizers,6,Microtubule destabilizers,5,Eg5 inhibitors,0,Actin disruptors,8,Protein degradation
+8,Protein degradation,8,Protein degradation,8,Protein degradation,5,Eg5 inhibitors,0,Actin disruptors,8,Protein degradation
+8,Protein degradation,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,8,Protein degradation,8,Protein degradation
+8,Protein degradation,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,8,Protein degradation,8,Protein degradation
+8,Protein degradation,5,Eg5 inhibitors,5,Eg5 inhibitors,2,DMSO,8,Protein degradation,8,Protein degradation
+8,Protein degradation,5,Eg5 inhibitors,5,Eg5 inhibitors,2,DMSO,8,Protein degradation,8,Protein degradation
+8,Protein degradation,8,Protein degradation,5,Eg5 inhibitors,5,Eg5 inhibitors,8,Protein degradation,8,Protein degradation
+8,Protein degradation,5,Eg5 inhibitors,7,Microtubule stabilizers,5,Eg5 inhibitors,8,Protein degradation,8,Protein degradation
+8,Protein degradation,1,Aurora kinase inhibitors,2,DMSO,5,Eg5 inhibitors,0,Actin disruptors,8,Protein degradation
+8,Protein degradation,7,Microtubule stabilizers,7,Microtubule stabilizers,5,Eg5 inhibitors,0,Actin disruptors,7,Microtubule stabilizers
+8,Protein degradation,1,Aurora kinase inhibitors,7,Microtubule stabilizers,5,Eg5 inhibitors,0,Actin disruptors,0,Actin disruptors
+8,Protein degradation,8,Protein degradation,7,Microtubule stabilizers,5,Eg5 inhibitors,0,Actin disruptors,8,Protein degradation
+8,Protein degradation,8,Protein degradation,7,Microtubule stabilizers,5,Eg5 inhibitors,0,Actin disruptors,7,Microtubule stabilizers
+8,Protein degradation,8,Protein degradation,2,DMSO,5,Eg5 inhibitors,0,Actin disruptors,8,Protein degradation
+8,Protein degradation,8,Protein degradation,8,Protein degradation,5,Eg5 inhibitors,0,Actin disruptors,8,Protein degradation
+8,Protein degradation,8,Protein degradation,7,Microtubule stabilizers,5,Eg5 inhibitors,0,Actin disruptors,8,Protein degradation
+8,Protein degradation,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,8,Protein degradation,8,Protein degradation
+8,Protein degradation,5,Eg5 inhibitors,5,Eg5 inhibitors,5,Eg5 inhibitors,8,Protein degradation,8,Protein degradation
+8,Protein degradation,8,Protein degradation,5,Eg5 inhibitors,5,Eg5 inhibitors,8,Protein degradation,8,Protein degradation
+8,Protein degradation,8,Protein degradation,8,Protein degradation,5,Eg5 inhibitors,8,Protein degradation,8,Protein degradation
+3,DNA damage,2,DMSO,2,DMSO,2,DMSO,1,Aurora kinase inhibitors,2,DMSO
+3,DNA damage,2,DMSO,2,DMSO,2,DMSO,1,Aurora kinase inhibitors,2,DMSO
+3,DNA damage,1,Aurora kinase inhibitors,2,DMSO,2,DMSO,1,Aurora kinase inhibitors,2,DMSO
+3,DNA damage,2,DMSO,2,DMSO,2,DMSO,1,Aurora kinase inhibitors,2,DMSO
+3,DNA damage,2,DMSO,2,DMSO,2,DMSO,2,DMSO,2,DMSO
+3,DNA damage,2,DMSO,2,DMSO,2,DMSO,1,Aurora kinase inhibitors,2,DMSO
+3,DNA damage,2,DMSO,2,DMSO,2,DMSO,1,Aurora kinase inhibitors,2,DMSO
+3,DNA damage,3,DNA damage,2,DMSO,2,DMSO,1,Aurora kinase inhibitors,2,DMSO
+3,DNA damage,2,DMSO,2,DMSO,2,DMSO,1,Aurora kinase inhibitors,2,DMSO
+3,DNA damage,2,DMSO,2,DMSO,2,DMSO,1,Aurora kinase inhibitors,2,DMSO
+3,DNA damage,2,DMSO,2,DMSO,2,DMSO,1,Aurora kinase inhibitors,2,DMSO
+3,DNA damage,2,DMSO,2,DMSO,2,DMSO,1,Aurora kinase inhibitors,2,DMSO
+3,DNA damage,1,Aurora kinase inhibitors,2,DMSO,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+3,DNA damage,1,Aurora kinase inhibitors,2,DMSO,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+3,DNA damage,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+3,DNA damage,1,Aurora kinase inhibitors,2,DMSO,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+3,DNA damage,2,DMSO,2,DMSO,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+3,DNA damage,2,DMSO,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+3,DNA damage,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+3,DNA damage,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+3,DNA damage,2,DMSO,2,DMSO,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+3,DNA damage,2,DMSO,2,DMSO,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+3,DNA damage,1,Aurora kinase inhibitors,2,DMSO,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+3,DNA damage,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+3,DNA damage,1,Aurora kinase inhibitors,2,DMSO,2,DMSO,1,Aurora kinase inhibitors,3,DNA damage
+3,DNA damage,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,3,DNA damage
+3,DNA damage,1,Aurora kinase inhibitors,2,DMSO,2,DMSO,1,Aurora kinase inhibitors,2,DMSO
+3,DNA damage,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,3,DNA damage
+3,DNA damage,2,DMSO,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+3,DNA damage,2,DMSO,2,DMSO,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+3,DNA damage,2,DMSO,2,DMSO,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+3,DNA damage,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,6,Microtubule destabilizers
+3,DNA damage,1,Aurora kinase inhibitors,2,DMSO,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+3,DNA damage,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+3,DNA damage,2,DMSO,2,DMSO,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors
+3,DNA damage,2,DMSO,2,DMSO,2,DMSO,1,Aurora kinase inhibitors,1,Aurora kinase inhibitors

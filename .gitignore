@@ -21,6 +21,11 @@ venv/
 /data/raw/metadata/*
 !/data/raw/metadata/.gitkeep
 
+# Rebuild caches for the per-channel dataset (large; regenerate via
+# multiseed_resnet.py / finalize_figures_stats.py, do not version control)
+/data/raw/df_default_grouped.pkl
+/data/raw/x_img_grouped.npy
+
 # Processed outputs and generated artifacts
 /data/processed/resized/*
 !/data/processed/resized/.gitkeep

@@ -1,0 +1,14 @@
+{
+  "before": {
+    "silhouette_on_batch": -0.28483223607871355,
+    "batch_predictability_accuracy": 0.10921035169210351,
+    "pc1_pct_var": 37.275703018361256,
+    "pc2_pct_var": 15.151139039508069
+  },
+  "after": {
+    "silhouette_on_batch": -0.1033200465779855,
+    "batch_predictability_accuracy": 0.0897898694978987,
+    "pc1_pct_var": 37.574460290462255,
+    "pc2_pct_var": 14.274080918960081
+  }
+}
