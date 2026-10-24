@@ -1129,7 +1129,7 @@ print("Tables written.")
 doc.add_page_break()
 h1("Figures")
 
-FIG_DIR = r"C:\Users\nanda\Downloads\BBBC021_fix\final_figures"
+FIG_DIR = str(Path(__file__).resolve().parent.parent / "final_figures")
 
 def add_figure(path, width=5.8):
     import os
