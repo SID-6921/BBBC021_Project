@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-"""Point-by-point response to Reviewer 1 and Reviewer 2, MS 1926843."""
+"""Point-by-point response to Reviewer 1, Reviewer 2, and Reviewer 3, MS 1926843."""
+from pathlib import Path
+
 from docx import Document
 from docx.shared import Pt, Inches
 from docx.enum.text import WD_ALIGN_PARAGRAPH
@@ -240,7 +242,7 @@ response(
     "correlation and the fraction of tested compounds (of 8 with sufficient "
     "concentration levels) showing a sign-consistent dose-response relationship. "
     "Magnitudes are smaller than the pooled correlation we originally reported "
-    "(median \u03c1 -0.02 to -0.33 vs. a pooled \u03c1\u224810.20), which we present as the "
+    "(median \u03c1 -0.02 to -0.33 vs. a pooled \u03c1\u22480.20), which we present as the "
     "expected and more honest consequence of not conflating potency across "
     "compounds."
 )
@@ -489,9 +491,148 @@ items = [
 ]
 
 for num, title_text, comment_text, response_text in items:
-    h2(f"Comment {num} \u2014 {title_text}")
+    h2(f"Comment {num} — {title_text}")
     comment(comment_text)
     response(response_text)
 
-doc.save(r"C:\Users\nanda\Downloads\BBBC021_revision\Response_to_Reviewers.docx")
+doc.add_page_break()
+
+# =====================================================================
+# REVIEWER 3
+# =====================================================================
+h1("Reviewer 3")
+body_r3_intro = doc.add_paragraph()
+body_r3_intro.add_run(
+    "We thank the reviewer for a close reading of this revision and for crediting "
+    "the compound-level splitting, channel-specific feature extraction, and "
+    "statistical validation as genuine improvements. We respond to each point "
+    "below, followed by three additional numeric corrections we found while "
+    "preparing this response."
+)
+
+h2("Comment 1 — Compound and concentration selection, biological diversity")
+comment(
+    "The dataset contains a limited number of compounds per MOA category, with "
+    "some categories represented by only one compound. Could the authors clarify "
+    "how these compounds and their concentrations were selected, and to what "
+    "extent they adequately represent the biological diversity within each MOA "
+    "category?"
+)
+response(
+    "The compounds and concentrations are not ours to select: they are whichever "
+    "BBBC021 (Ljosa et al., 2012) recorded for the 16 publicly accessible archive "
+    "files we retrieved (Methods 2.1). We have added a sentence to Section 2.1 "
+    "stating this directly and clarifying that the dataset is a fixed, "
+    "pre-annotated public resource rather than a panel we designed for biological "
+    "diversity. We have also sharpened the Section 4.4 limitation to state plainly "
+    "that four of ten classes rest on a single compound, so results for those "
+    "classes describe that compound's morphology rather than the MOA category in "
+    "general; wider coverage would require retrieving more of BBBC021's archive "
+    "beyond the 16 files used here."
+)
+
+h2("Comment 2 — Comparison with CellProfiler")
+comment(
+    "The authors developed a custom morphological feature-extraction pipeline. "
+    "How does its performance compare with established, readily available tools "
+    "such as CellProfiler? A brief comparison or discussion would help clarify the "
+    "advantages and limitations of the proposed approach."
+)
+response(
+    "We have not run CellProfiler's own feature set through the same classifiers "
+    "on the same compound-level split; our detection step follows CellProfiler's "
+    "preprocessing logic (adaptive thresholding, morphological opening and "
+    "closing; Carpenter et al., 2006) but our 14 per-channel descriptors are a "
+    "custom set, not CellProfiler output. We have added this as an explicit "
+    "limitation (Section 4.4) rather than implying equivalence. Running "
+    "CellProfiler itself on the 824 images used here requires the raw BBBC021 "
+    "image archive, which is not part of this repository's committed assets; we "
+    "are not able to complete that run within this response cycle, and we have "
+    "scoped it as a stated limitation rather than add an untested analysis."
+)
+
+h2("Comment 3 — Biological relevance to redox pharmacology")
+comment(
+    "Given the manuscript's emphasis on redox pharmacology and pulmonary "
+    "diseases, could the authors elaborate on which morphological features are "
+    "most relevant to oxidative stress and how these features might relate to "
+    "pulmonary disease biology? This would help clarify the biological "
+    "interpretation and potential translational relevance of the findings."
+)
+response(
+    "Section 4.3 already narrows this claim: BBBC021 is MCF-7 breast cancer "
+    "cells, and we measure no ROS or oxidative stress anywhere in the pipeline, "
+    "so we cannot say which features are oxidative-stress-specific. We have added "
+    "a paragraph to Section 4.3 giving the limited, hedged answer the reviewer is "
+    "asking for: the top-ablation DAPI features (spot area, spot count, spot "
+    "density; Table 6) track nuclear fragmentation and chromatin condensation, a "
+    "downstream readout shared by several stress pathways and not specific to "
+    "ROS; the tubulin- and actin-channel features in the same ablation set track "
+    "cytoskeletal reorganization, the established direct readout of "
+    "microtubule- and actin-targeting MOAs independent of any redox involvement. "
+    "Confirming a redox-specific link would need an orthogonal ROS assay on a "
+    "matched compound panel, outside the scope of this computational "
+    "benchmarking study."
+)
+
+h2("Comment 4 — Generalizability across compounds")
+comment(
+    "Although compound-level splitting is an important improvement, the limited "
+    "compound diversity raises questions about generalizability. Could the "
+    "authors further discuss how reliably the trained models can classify "
+    "previously unseen compounds sharing the same MOA, and what additional "
+    "validation would be needed to establish broader applicability?"
+)
+response(
+    "This is the dataset's central limitation, and we have added a new Section "
+    "4.5 and Table 10 to answer it with data rather than discussion alone. "
+    "Because every multi-compound class has at most 4 compounds, the main "
+    "evaluation tests each of the six evaluable classes against exactly one "
+    "held-out compound (now stated explicitly in Section 2.1); a static "
+    "per-compound breakdown of that single-compound test set is therefore not "
+    "informative, since there is only one compound to break down. Instead, we ran "
+    "leave-one-compound-out cross-validation for Random Forest and Logistic "
+    "Regression, the two models retrainable without GPU access: for every "
+    "compound in every multi-compound class, we trained on all remaining images "
+    "and tested on that compound alone, rotating through every compound in turn "
+    "(Table 10). The result is substantially less optimistic than Table 2's "
+    "single-split numbers: Random Forest correctly classifies 0% of held-out "
+    "colchicine and nocodazole images in the microtubule-destabilizer class "
+    "despite 75% on held-out demecolcine in the same class, and 0-8% of held-out "
+    "protein-degradation compounds. This directly confirms the reviewer's "
+    "concern: compound-level splitting prevents leakage, but with only 2-4 "
+    "compounds per class it does not establish a compound-invariant "
+    "representation of each MOA. We state in Section 4.5 that establishing this "
+    "would require more compounds per MOA class than the present 16-archive-file "
+    "subset provides."
+)
+
+h2("Additional corrections found while preparing this response")
+response(
+    "Three numeric inconsistencies were caught during this response cycle, "
+    "independent of the reviewer's points above, and are corrected in the "
+    "revised manuscript. First, Figures 3 through 6 reported macro-OvR AUC "
+    "values 0.001-0.003 higher than the matching Table 2 values, despite two "
+    "captions stating the legend values matched Table 2 exactly; the cause was "
+    "the figure code computing the macro-average AUC from an interpolated mean "
+    "ROC curve rather than the mean of per-class AUCs used everywhere else in the "
+    "manuscript. We traced this to src/finalize_figures_stats.py, corrected it so "
+    "the legend reports the same multiclass_auc() value as Table 2, and "
+    "regenerated Figures 3-6 directly from the already-saved test-set probability "
+    "arrays (no retraining required, and we verified these arrays reproduce "
+    "Table 2's numbers exactly before regenerating the figures). Second, Section "
+    "3.5 stated that within-compound dose-response correlations are weaker in "
+    "magnitude than the originally reported pooled correlation; this does not "
+    "hold for two of six Table 7 features (dapi_spot_count, "
+    "dapi_density_spots_per_10k_px; ρ=-0.33), so we qualified the sentence to "
+    "say ‘most, but not all’ features, and corrected a typo that had rendered "
+    "the pooled reference value as ‘ρ≈10.20’ instead of ‘ρ≈0.20’ (this typo was "
+    "also present in our response to Reviewer 1, Comment 7, now corrected there "
+    "as well). Third, Section 3.6 reported ResNet-18 training times of "
+    "150-370 seconds, which matched neither of Table 9's two reported ranges "
+    "(scratch 310-590s; pretrained 145-275s); we corrected the prose to report "
+    "both ranges explicitly."
+)
+
+doc.save(str(Path(__file__).resolve().parent / "Response_to_Reviewers.docx"))
 print("Response letter saved.")

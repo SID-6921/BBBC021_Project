@@ -1,0 +1,17 @@
+MOA class,Held-out compound,n_images,RF accuracy,LR accuracy
+Actin disruptors,cytochalasin B,24,0.375,0.417
+Actin disruptors,cytochalasin D,12,1.0,0.583
+Actin disruptors,latrunculin B,24,0.292,0.5
+Aurora kinase inhibitors,AZ-A,72,0.708,0.778
+Aurora kinase inhibitors,AZ841,36,0.917,0.583
+DNA damage,chlorambucil,4,1.0,0.75
+DNA damage,cisplatin,4,0.0,0.25
+DNA damage,etoposide,36,0.111,0.222
+Microtubule destabilizers,colchicine,12,0.0,0.0
+Microtubule destabilizers,demecolcine,16,0.75,0.812
+Microtubule destabilizers,nocodazole,24,0.0,0.0
+Microtubule destabilizers,vincristine,84,0.107,0.202
+Microtubule stabilizers,epothilone B,36,0.639,0.75
+Microtubule stabilizers,taxol,124,0.355,0.589
+Protein degradation,ALLN,24,0.0,0.333
+Protein degradation,MG-132,24,0.083,0.417

@@ -2,6 +2,8 @@
 """Builds the revised BBBC021 manuscript (Frontiers in Pharmacology, MS 1926843)
 incorporating the full response to Reviewer 1 and Reviewer 2.
 """
+from pathlib import Path
+
 from docx import Document
 from docx.shared import Pt, Inches
 from docx.enum.text import WD_ALIGN_PARAGRAPH
@@ -244,6 +246,16 @@ body(
     "criterion and the small per-class test-set counts it implied."
 )
 body(
+    "The compounds and their tested concentrations are not a sample we selected: "
+    "they are whichever compounds and concentrations BBBC021's original annotation "
+    "(Ljosa et al., 2012) recorded for the 16 archive files we retrieved. We did not "
+    "choose compounds or concentrations to represent the biological diversity of "
+    "each MOA category, and the dataset should not be read as a designed "
+    "pharmacological panel; it is a fixed, pre-annotated public resource, and the "
+    "compound set available for each MOA class is a property of that resource, not "
+    "of our study design."
+)
+body(
     "Critically, the number of distinct compounds contributing to each class also "
     "varies substantially (Table 1): six classes are represented by 2-4 compounds, "
     "and four classes -- DMSO (vehicle control), DNA replication inhibitors, Eg5 "
@@ -263,7 +275,14 @@ body(
     "correspondingly undefined for these four classes and are reported as such "
     "throughout, never silently omitted. The resulting partition contains 468 "
     "training, 28 validation, and 328 test images, spanning all 10 classes in "
-    "training and 6 of 10 classes in validation/test (Table 1)."
+    "training and 6 of 10 classes in validation/test (Table 1). Because every "
+    "multi-compound class in this subset has at most 4 distinct compounds, the "
+    "20%-of-compounds test allocation rounds to exactly one compound per class in "
+    "every case: each of the six evaluable classes is tested against a single "
+    "held-out compound, not a held-out set of compounds. Per-class test accuracy in "
+    "this study is therefore accuracy on one specific unseen compound per class, "
+    "and a different choice of held-out compound could give a different result; we "
+    "quantify this directly in Section 4.4."
 )
 body(
     "This is a substantive change from our original submission, which split images "
@@ -579,14 +598,19 @@ body(
     "Kruskal-Wallis tests confirm significant class-stratification for the top "
     "DAPI-channel features tested (H=223-589, p<10\u207b\u2074\u00b2 for all; Table 7). Within-compound "
     "Spearman correlations between these features and concentration are weaker in "
-    "magnitude than the pooled correlation we originally reported (median "
-    "\u03c1=-0.02 to -0.33 across features, versus a pooled \u03c1\u224810.20 magnitude reported "
-    "previously), which is expected once concentration is not compared across "
-    "compounds of very different potency; the sign of the within-compound "
-    "correlation is consistent across 62.5-87.5% of the 8 compounds tested per "
-    "feature, indicating a real but compound-dependent dose-response relationship "
-    "rather than the artificially inflated and biologically uninterpretable pooled "
-    "statistic we reported originally."
+    "magnitude than the pooled correlation we originally reported for most, but not "
+    "all, of these features (median \u03c1=-0.02 to -0.33 across features, versus a pooled "
+    "\u03c1\u22480.20 magnitude reported previously); two features (dapi_spot_count, "
+    "dapi_density_spots_per_10k_px) show a within-compound correlation of larger "
+    "magnitude (\u03c1=-0.33) than the original pooled estimate, so the pooled statistic "
+    "understated rather than inflated the relationship for these two features "
+    "specifically, even though it remains biologically uninterpretable as a pooled "
+    "quantity for the reasons given above. This is expected once concentration is "
+    "not compared across compounds of very different potency; the sign of the "
+    "within-compound correlation is consistent across 62.5-87.5% of the 8 compounds "
+    "tested per feature, indicating a real but compound-dependent dose-response "
+    "relationship rather than the artificially inflated and biologically "
+    "uninterpretable pooled statistic we reported originally."
 )
 body(
     "PCA of the 42-feature vectors shows batch structure by weekly acquisition group "
@@ -609,9 +633,10 @@ body(
     "hardware specification. Logistic Regression and Random Forest trained in "
     "well under 2 seconds. The compact CNN (6 epochs) trained in under a minute. "
     "The two ResNet-18 conditions, each trained for a matched total of 16 epochs, "
-    "took approximately 150-370 seconds per run depending on random seed and "
-    "condition (Table 9); because all reported training times are on CPU only, they "
-    "should not be extrapolated to GPU-accelerated deployment settings."
+    "took approximately 145-275 seconds per run for the pretrained condition and "
+    "310-590 seconds per run for the scratch condition, depending on random seed "
+    "(Table 9); because all reported training times are on CPU only, they should "
+    "not be extrapolated to GPU-accelerated deployment settings."
 )
 
 print("Results written.")
@@ -700,6 +725,23 @@ body(
     "independent ROS/oxidative-stress readout on the same or a related compound set, "
     "or a pulmonary cell-based assay, neither of which is part of the present study."
 )
+body(
+    "That said, the reviewer's question of which features plausibly link to which "
+    "biology is worth answering explicitly, with the same hedging. The top-ablation "
+    "DAPI-channel features (Table 6: spot area, spot count, spot density) track "
+    "nuclear fragmentation and chromatin condensation, a downstream morphological "
+    "readout shared by several stress pathways, oxidative stress among them but not "
+    "specific to it; the same features also respond to DNA-damaging agents and "
+    "mitotic arrest through non-redox mechanisms, so elevated signal on these "
+    "descriptors cannot be attributed to ROS without an independent assay. The "
+    "tubulin- and actin-channel features in the same top-8 ablation set (Section "
+    "3.5) track cytoskeletal reorganization, which is the direct, well-established "
+    "readout of microtubule- and actin-targeting MOAs regardless of any redox "
+    "involvement; we do not have grounds to re-attribute this signal to oxidative "
+    "stress either, and we did not intend the ablation ranking to be read as a "
+    "biological specificity ranking. We present this limited answer to avoid "
+    "overclaiming a mechanistic interpretation in either direction."
+)
 
 h2("4.4 Limitations")
 body(
@@ -725,7 +767,67 @@ body(
     "to GPU-accelerated deployment settings. Fifth, as in our original submission, "
     "all results derive from a single publicly available dataset (BBBC021); "
     "cross-dataset generalization to BBBC014, BBBC020, or RxRx1 (Bray et al., 2016; "
-    "Sypetkowski et al., 2023) has not been tested and remains future work."
+    "Sypetkowski et al., 2023) has not been tested and remains future work. Sixth, "
+    "we compared our custom per-channel feature-extraction pipeline against "
+    "CellProfiler (Carpenter et al., 2006) only at the level of preprocessing logic "
+    "(Section 2.2); we did not run CellProfiler's own feature set through the same "
+    "classifiers on the same compound-level split, so we cannot yet quantify how our "
+    "14-descriptor set compares to CellProfiler's output on this task."
+)
+
+h2("4.5 Generalizability across held-out compounds")
+body(
+    "A compound-disjoint test set is not the same as a compound-diverse one. "
+    "Because every multi-compound class here has at most 4 distinct compounds "
+    "(Section 2.1), the main evaluation tests each of the six evaluable classes "
+    "against exactly one held-out compound, so Table 2's per-class performance "
+    "describes generalization to that one compound rather than to the class in "
+    "general. To ask the question the way a reader of Table 2 might assume it was "
+    "already answered, how reliably can the model classify a compound it has never "
+    "seen, for any compound in its class, we ran leave-one-compound-out "
+    "cross-validation on Random Forest and Logistic Regression, the two models we "
+    "can retrain without GPU access: for every compound in every multi-compound "
+    "class, we trained on all remaining images (all other classes included in "
+    "full) and tested on that compound alone, rotating through every compound in "
+    "turn (Table 10; full per-compound results in the project repository)."
+)
+body(
+    "The result is substantially less optimistic than Table 2's single-split "
+    "numbers and we report it without softening it. Per-class accuracy on a "
+    "held-out compound ranges from 0% to 100% depending on which compound is held "
+    "out: Random Forest correctly classifies 0% of held-out colchicine and "
+    "nocodazole images in the microtubule-destabilizer class despite classifying "
+    "75% of held-out demecolcine images in the same class, and 0-8% of held-out "
+    "protein-degradation compounds (ALLN, MG-132) against each other. Aurora "
+    "kinase inhibitors generalize best (71-92% across its two compounds); protein "
+    "degradation and microtubule destabilizers generalize worst. This variance is "
+    "compound-specific, not a single generalization number, and it is larger than "
+    "the headline Table 2 accuracy would suggest on its own. We read this as "
+    "confirming the reviewer's concern directly: compound-level splitting prevents "
+    "leakage, but with only 2-4 compounds per class it does not yet establish "
+    "that the model has learned a compound-invariant representation of each MOA. "
+    "Establishing that would need more compounds per MOA class than the present "
+    "16-archive-file subset of BBBC021 provides (Section 4.4)."
+)
+body("Table 10. Leave-one-compound-out cross-validation, Random Forest and Logistic Regression, per MOA class.")
+table_from_rows(
+    ["MOA class", "Compounds tested", "RF accuracy (mean, range)", "LR accuracy (mean, range)"],
+    [
+        ["Actin disruptors", "3", "0.556 (0.292-1.000)", "0.500 (0.417-0.583)"],
+        ["Aurora kinase inhibitors", "2", "0.812 (0.708-0.917)", "0.680 (0.583-0.778)"],
+        ["DNA damage", "3", "0.370 (0.000-1.000)", "0.407 (0.222-0.750)"],
+        ["Microtubule destabilizers", "4", "0.214 (0.000-0.750)", "0.254 (0.000-0.812)"],
+        ["Microtubule stabilizers", "2", "0.497 (0.355-0.639)", "0.670 (0.589-0.750)"],
+        ["Protein degradation", "2", "0.042 (0.000-0.083)", "0.375 (0.333-0.417)"],
+    ],
+)
+caption(
+    "Table 10. Each row holds out every compound in that class in turn, training "
+    "on all remaining images (all other classes included in full) and testing on "
+    "the held-out compound alone; range is across that class's compounds. This "
+    "differs from Table 2's single compound-level split and is intended to show "
+    "compound-to-compound variance in generalization, not to replace Table 2's "
+    "headline comparison across models."
 )
 
 # =====================================================================
@@ -1169,5 +1271,5 @@ add_figure(f"{FIG_DIR}\\supplementary_figure_s1_feature_correlation.png")
 caption("Supplementary Figure S4. Spearman correlation matrix across all 42 per-channel morphological features.")
 
 print("Figures section written.")
-doc.save(r"C:\Users\nanda\Downloads\BBBC021_revision\BBBC021_Manuscript_REVISED.docx")
+doc.save(str(Path(__file__).resolve().parent / "BBBC021_Manuscript_REVISED.docx"))
 print("Saved checkpoint 6.")
