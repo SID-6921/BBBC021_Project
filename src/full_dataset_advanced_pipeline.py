@@ -850,7 +850,7 @@ def save_confusion_matrix(y_true: np.ndarray, y_pred: np.ndarray, labels: list[s
     )
     ax.set_title(title)
     plt.tight_layout()
-    plt.savefig(out_path, dpi=180)
+    plt.savefig(out_path, dpi=300)
     plt.close()
 
 
@@ -869,7 +869,7 @@ def save_calibration_plot(y_true: np.ndarray, probs: dict[str, np.ndarray], out_
     plt.ylabel("Observed accuracy")
     plt.legend()
     plt.tight_layout()
-    plt.savefig(out_path, dpi=180)
+    plt.savefig(out_path, dpi=300)
     plt.close()
     return pd.DataFrame(rows)
 
@@ -898,7 +898,7 @@ def save_pca_batch_effects(df: pd.DataFrame, out_before: Path, out_after: Path) 
         ax.set_title(title)
         ax.legend(title="batch_name", bbox_to_anchor=(1.02, 1), loc="upper left", fontsize=8)
         plt.tight_layout()
-        plt.savefig(out_path, dpi=180)
+        plt.savefig(out_path, dpi=300)
         plt.close()
 
         sil = float(silhouette_score(p, batch_labels)) if batch_labels.nunique() > 1 else float("nan")
@@ -1064,9 +1064,9 @@ def save_feature_correlation(df: pd.DataFrame, out_path: Path) -> None:
     corr = df[FEATURE_COLS_PER_CHANNEL].corr(method="spearman")
     plt.figure(figsize=(10, 8))
     sns.heatmap(corr, cmap="coolwarm", center=0, square=True)
-    plt.title("Supplementary Figure S1. Spearman Feature Correlation Matrix")
+    plt.title("Spearman Feature Correlation Matrix")
     plt.tight_layout()
-    plt.savefig(out_path, dpi=180)
+    plt.savefig(out_path, dpi=300)
     plt.close()
 
 
@@ -1220,7 +1220,7 @@ def run(root: Path, target_total: int = 1600) -> None:
         plt.title(title)
         plt.legend()
         plt.tight_layout()
-        plt.savefig(final_figures / fname, dpi=180)
+        plt.savefig(final_figures / fname, dpi=300)
         plt.close()
 
     model_probs = {
@@ -1256,9 +1256,9 @@ def run(root: Path, target_total: int = 1600) -> None:
     delong_resnet_pre_vs_rf = delong_test_multiclass_macro(y_test, model_probs["resnet18_pretrained"], model_probs["random_forest"])
 
     # Figures and tables
-    save_confusion_matrix(y_test, model_preds["logistic_regression"], class_names, final_figures / "figure11_confusion_matrix_lr_12class.png", "12-class Confusion Matrix - Logistic Regression")
-    save_confusion_matrix(y_test, model_preds["random_forest"], class_names, final_figures / "figure12_confusion_matrix_rf_12class.png", "12-class Confusion Matrix - Random Forest")
-    save_confusion_matrix(y_test, model_preds["resnet18_pretrained"], class_names, final_figures / "figure13_confusion_matrix_resnet_pretrained_12class.png", "12-class Confusion Matrix - ResNet-18 Pretrained")
+    save_confusion_matrix(y_test, model_preds["logistic_regression"], class_names, final_figures / "figure11_confusion_matrix_lr_12class.png", "Confusion Matrix - Logistic Regression")
+    save_confusion_matrix(y_test, model_preds["random_forest"], class_names, final_figures / "figure12_confusion_matrix_rf_12class.png", "Confusion Matrix - Random Forest")
+    save_confusion_matrix(y_test, model_preds["resnet18_pretrained"], class_names, final_figures / "figure13_confusion_matrix_resnet_pretrained_12class.png", "Confusion Matrix - ResNet-18 Pretrained")
 
     ece_df = save_calibration_plot(y_test, model_probs, final_figures / "figure14_calibration_curves_multiclass.png")
     batch_effect_metrics = save_pca_batch_effects(df_default, final_figures / "figure15_pca_batch_before.png", final_figures / "figure16_pca_batch_after.png")
@@ -1270,9 +1270,9 @@ def run(root: Path, target_total: int = 1600) -> None:
     sns.barplot(data=ablation_df, x="ablation", y="test_auc")
     plt.xticks(rotation=30, ha="right")
     plt.ylim(0.0, 1.0)
-    plt.title("Feature Ablation Study (Random Forest, 12-class)")
+    plt.title("Feature Ablation Study (Random Forest)")
     plt.tight_layout()
-    plt.savefig(final_figures / "figure17_feature_ablation.png", dpi=180)
+    plt.savefig(final_figures / "figure17_feature_ablation.png", dpi=300)
     plt.close()
 
     save_feature_correlation(df_default, final_figures / "supplementary_figure_s1_feature_correlation.png")
