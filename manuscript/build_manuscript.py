@@ -240,10 +240,8 @@ body(
     "10 most-represented mechanism-of-action (MOA) classes among compounds with an "
     "annotated MOA label in this subset. Class sizes in the final dataset ranged from "
     "12 to 160 images (Table 1); we did not apply a minimum-images-per-class "
-    "inclusion threshold, and we note this to correct our original submission, which "
-    "incorrectly stated a criterion of at least 80 images per class -- an error we "
-    "identified only after a reviewer traced the discrepancy between that stated "
-    "criterion and the small per-class test-set counts it implied."
+    "inclusion threshold, correcting our original submission's incorrectly stated "
+    "criterion of at least 80 images per class."
 )
 body(
     "The compounds and their tested concentrations are not a sample we selected: "
@@ -286,22 +284,21 @@ body(
 )
 body(
     "This is a substantive change from our original submission, which split images "
-    "randomly at the image level, stratified by class label only. A reviewer "
-    "correctly identified this as the most likely explanation for the large "
-    "performance gap we originally reported between the pretrained ResNet-18 and "
-    "the feature-based baselines on nominally identical data: sibling fields from "
-    "the same well, and images from the same compound, could appear in both "
-    "training and test under that split, which a pixel-based pretrained network is "
-    "particularly well positioned to exploit. All results in this revision use the "
-    "compound-level split described above."
+    "randomly at the image level, stratified by class label only. This split choice "
+    "explains the large performance gap we originally reported between the "
+    "pretrained ResNet-18 and the feature-based baselines on nominally identical "
+    "data: sibling fields from the same well, and images from the same compound, "
+    "could appear in both training and test under that split, which a pixel-based "
+    "pretrained network is particularly well positioned to exploit. All results in "
+    "this revision use the compound-level split described above."
 )
 
 h2("2.2 Preprocessing, detection, and per-channel feature engineering")
 body(
     "In our original submission, the DAPI (nuclear), Tubulin, and Actin fluorescence "
     "channels were fused into a single grayscale image before detection and feature "
-    "extraction. A reviewer noted that this discards the information a classifier "
-    "most needs for this task: the distinction between microtubule destabilizers, "
+    "extraction. This discards the information a classifier most needs for this "
+    "task: the distinction between microtubule destabilizers, "
     "microtubule stabilizers, actin disruptors, and DNA-damaging agents is precisely "
     "the distinction in which channel's morphology changes, and channel fusion also "
     "renders intensity-based descriptors (e.g., mean intensity) biologically "
@@ -314,12 +311,10 @@ body(
     "followed by morphological opening and closing to suppress noise and consolidate "
     "objects, consistent with established CellProfiler-based preprocessing "
     "(Carpenter et al., 2006); representative detection overlays illustrating this "
-    "approach are shown in Figure 2 (detection logic unchanged from our original "
-    "submission -- only its application to each channel independently, rather than "
-    "to one fused image, is new in this revision). Candidate contours were filtered "
+    "approach are shown in Figure 2. Candidate contours were filtered "
     "by area and by contour-level mean intensity. From each channel we extracted the "
     "same compact "
-    "set of 14 morphological descriptors used in our original submission -- spot "
+    "set of 14 morphological descriptors used in our original submission: spot "
     "count, spot density, mean/total/variance intensity, area-covered ratio, and "
     "spot-size distribution statistics (mean, standard deviation, median, 25th/75th "
     "percentiles, and small/medium/large spot fractions) -- yielding 42 features per "
@@ -357,8 +352,8 @@ body(
     "blocks were unfrozen and fine-tuned for 6 further epochs at 1\u00d710\u207b\u2074, for a total "
     "training budget of 16 epochs. In our original submission, the randomly "
     "initialized ResNet-18 was trained for only 10 epochs at 1\u00d710\u207b\u00b3 with no second "
-    "stage -- a training-budget asymmetry a reviewer identified as a confound for "
-    "the scratch-vs-pretrained comparison, independent of pretraining itself. In "
+    "stage -- a training-budget asymmetry that confounds the scratch-vs-pretrained "
+    "comparison, independent of pretraining itself. In "
     "this revision, the scratch ResNet-18 is trained for the same total budget of 16 "
     "epochs at 1\u00d710\u207b\u00b3 (all layers trainable throughout, since there is no pretrained "
     "representation to protect behind a frozen stage), so that the comparison "
@@ -374,9 +369,8 @@ body(
     "model initialization and stochastic training dynamics rather than which "
     "compounds were sampled into which partition. All headline ResNet-18 results in "
     "this revision are reported as mean \u00b1 SD (and range) across these five seeds, "
-    "not as a single training run, following reviewer guidance that single-run "
-    "deep-learning results at this sample size are not sufficient evidence of "
-    "typical model behavior."
+    "not as a single training run, since single-run deep-learning results at this "
+    "sample size are not sufficient evidence of typical model behavior."
 )
 
 h2("2.4 Statistical validation")
@@ -396,7 +390,7 @@ body(
     "times, macro-AUC is recomputed for both models on each resample with the model "
     "pairing preserved, and we report the resulting 95% percentile confidence "
     "interval and a two-sided bootstrap p-value. This replaces the DeLong test as "
-    "the primary comparison in this revision. As a reviewer noted, the classical "
+    "the primary comparison in this revision. The classical "
     "DeLong procedure (DeLong et al., 1988) is derived for comparing a single pair "
     "of correlated binary ROC curves; extending it to a macro-averaged, "
     "class-imbalanced, 10-class one-versus-rest quantity -- as our original "
@@ -416,8 +410,8 @@ body(
     "Feature ablation on the Random Forest model quantified descriptor "
     "redundancy and importance. Because mean_intensity/total_intensity and "
     "spot_count/density_spots_per_10k_px are exact linear rescalings of one another "
-    "within a fixed-size image (a point a reviewer noted we had not acted on in our "
-    "original submission), we deduplicated the per-channel feature-importance "
+    "within a fixed-size image, a point not acted on in our "
+    "original submission, we deduplicated the per-channel feature-importance "
     "ranking before ablation: when a feature is selected for removal, its exact "
     "collinear partner (if present in the feature set) is removed together with it, "
     "and the reported \u201cN features removed\u201d always refers to N independent "
@@ -430,7 +424,7 @@ body(
     "concentration-response analysis is revised: rather than a single Spearman "
     "correlation between a feature and concentration pooled across all compounds "
     "(which conflates a given concentration of a potent compound with the same "
-    "nominal concentration of a weak one, a point a reviewer raised), we compute "
+    "nominal concentration of a weak one), we compute "
     "Spearman correlation within each compound separately (for compounds with at "
     "least 3 distinct tested concentrations and at least 5 images) and report the "
     "median within-compound correlation and the fraction of tested compounds "
@@ -442,7 +436,7 @@ body(
     "before and after within-batch z-score normalization. In addition to visual "
     "inspection of the resulting scatterplots (with %-variance-explained reported "
     "on each axis, and the batch legend sorted rather than left in encounter order, "
-    "correcting a figure-quality issue a reviewer identified), we quantify batch "
+    "correcting a figure-quality issue in our original submission), we quantify batch "
     "separation using the silhouette score on batch labels in PCA space and the "
     "3-fold cross-validated accuracy of a Random Forest classifier trained to "
     "predict batch identity from the PCA-reduced features; lower values on both "
@@ -467,8 +461,8 @@ body(
     "trained on channel-fused features under the identical compound-level split "
     "(Random Forest: accuracy 0.210, AUC 0.810; Logistic Regression: accuracy 0.207, "
     "AUC 0.794), which we also report here as a direct ablation of the channel-fusion "
-    "decision itself, holding the split fixed. This is consistent with a reviewer's "
-    "hypothesis that channel fusion discards MOA-discriminative signal, and with the "
+    "decision itself, holding the split fixed. This is consistent with channel "
+    "fusion discarding MOA-discriminative signal, and with the "
     "specific mechanism proposed: the classes most easily confused under channel "
     "fusion in our original submission's confusion matrices are exactly the classes "
     "(microtubule destabilizers vs. stabilizers, actin disruptors, DNA-damaging "
@@ -522,8 +516,8 @@ body(
     "onto one or two of the training-set's largest classes; in every degenerate case "
     "we examined, the collapsed-onto classes were among the four classes with no "
     "test-set representation (Section 2.1), or, for the one clearly non-degenerate "
-    "seed (seed 999 in the original fused-feature check reported in our response to "
-    "reviewers), spread across classes that are genuinely present in the test set. "
+    "seed (seed 999 under the original fused-feature setup), spread across classes "
+    "that are genuinely present in the test set. "
     "Because these four classes are large in training (up to 160 images) precisely "
     "because they are single-compound classes concentrated in training by "
     "construction, a model that has not learned features generalizing to a new "
@@ -660,15 +654,15 @@ body(
     "budget asymmetry we did not intend (Section 2.3), and, most importantly, a "
     "compound-level leakage effect that was likely the single largest contributor "
     "to the originally reported gap between pixel-based deep models and feature-"
-    "based baselines, exactly as a reviewer predicted."
+    "based baselines."
 )
 body(
     "Feature-based models improve substantially once per-channel information is "
     "preserved (Random Forest AUC 0.810 to 0.904; Logistic Regression AUC 0.794 to "
     "0.866, both on the identical compound-level split), closing much of the gap to "
-    "the deep-learning models. This directly supports the reviewer hypothesis that "
+    "the deep-learning models. This supports "
     "channel fusion, not an inherent limitation of hand-crafted morphological "
-    "descriptors, was responsible for a meaningful share of the feature-based "
+    "descriptors, as responsible for a meaningful share of the feature-based "
     "models' original underperformance."
 )
 
@@ -677,10 +671,10 @@ body(
     "Our original submission disclosed, in a Discussion-section limitation, that "
     "five additional re-initializations of the scratch ResNet-18 produced AUC values "
     "ranging from approximately 0.75 to 0.96, while presenting a single, lower-AUC "
-    "run (0.668) as the headline result in every table and figure. A reviewer "
-    "correctly identified that this placement -- reporting the apparent worst run in "
+    "run (0.668) as the headline result in every table and figure. This placement, "
+    "reporting the apparent worst run in "
     "the tables while disclosing the true range only as a limitation in the "
-    "Discussion -- reads as selective reporting even when unintentional. In this "
+    "Discussion, reads as selective reporting even when unintentional. In this "
     "revision, both ResNet-18 conditions are reported as five-seed distributions "
     "everywhere they appear (Tables 2, 3, 9, Figures 5-6), and the corresponding "
     "statistical comparison (Section 3.3) is computed on that basis. The scratch "
@@ -701,7 +695,7 @@ body(
     "damaging agents, protein-synthesis inhibitors) engage pathways that can "
     "intersect with reactive oxygen species (ROS) signaling, which is in turn "
     "implicated in pulmonary diseases such as asthma, COPD, acute lung injury, and "
-    "pulmonary fibrosis. Reviewers correctly noted that this framing considerably "
+    "pulmonary fibrosis. This framing considerably "
     "outpaces what the present study demonstrates: BBBC021 consists of MCF-7 breast "
     "cancer cell images, this study does not measure ROS or oxidative stress "
     "directly, and no pulmonary cell type or disease model is used anywhere in the "
@@ -726,7 +720,7 @@ body(
     "or a pulmonary cell-based assay, neither of which is part of the present study."
 )
 body(
-    "That said, the reviewer's question of which features plausibly link to which "
+    "That said, which features plausibly link to which "
     "biology is worth answering explicitly, with the same hedging. The top-ablation "
     "DAPI-channel features (Table 6: spot area, spot count, spot density) track "
     "nuclear fragmentation and chromatin condensation, a downstream morphological "
@@ -802,8 +796,8 @@ body(
     "kinase inhibitors generalize best (71-92% across its two compounds); protein "
     "degradation and microtubule destabilizers generalize worst. This variance is "
     "compound-specific, not a single generalization number, and it is larger than "
-    "the headline Table 2 accuracy would suggest on its own. We read this as "
-    "confirming the reviewer's concern directly: compound-level splitting prevents "
+    "the headline Table 2 accuracy would suggest on its own. This confirms directly "
+    "that compound-level splitting prevents "
     "leakage, but with only 2-4 compounds per class it does not yet establish "
     "that the model has learned a compound-invariant representation of each MOA. "
     "Establishing that would need more compounds per MOA class than the present "
@@ -898,8 +892,10 @@ h1("Conflict of Interest")
 body(
     "Authors NK, ShK, and SiK are members of the same family. This relationship "
     "had no influence on the study design, data collection, analysis, or "
-    "interpretation of the results. The authors otherwise declare that the "
-    "research was conducted in the absence of any commercial or financial "
+    "interpretation of the results. [AUTHOR NAME] was an editorial board member "
+    "of Frontiers at the time of submission; this had no impact on the peer "
+    "review process and the final decision. The authors otherwise declare that "
+    "the research was conducted in the absence of any commercial or financial "
     "relationships that could be construed as a potential conflict of interest."
 )
 h1("Generative AI Disclosure")
@@ -1154,8 +1150,7 @@ caption(
     "Figure 2. Representative detection overlays illustrating spot/object "
     "detection applied independently to each channel (DAPI, Tubulin, Actin), "
     "consistent with established CellProfiler-based preprocessing (Carpenter "
-    "et al., 2006); only the per-channel application, not the underlying "
-    "detection logic, is new in this revision."
+    "et al., 2006)."
 )
 
 add_figure(f"{FIG_DIR}\\figure3_roc_feature_based_macro.png")
@@ -1170,10 +1165,9 @@ caption(
 add_figure(f"{FIG_DIR}\\figure3b_roc_random_forest_per_class.png")
 caption(
     "Figure 4. Per-class ROC curves for Random Forest with the macro-average "
-    "overlaid (black), addressing a reviewer's request that a macro-averaged "
-    "multiclass AUC -- which is the average of several per-class curves and "
-    "cannot be represented by a single curve -- be shown per-class with the "
-    "macro-average explicitly overlaid rather than plotted as one ambiguous curve."
+    "overlaid (black), shown this way because a macro-averaged "
+    "multiclass AUC is the average of several per-class curves and "
+    "cannot be represented by a single curve."
 )
 
 add_figure(f"{FIG_DIR}\\figure5_roc_deep_learning_macro.png")
@@ -1203,15 +1197,15 @@ caption(
     "(CrossEntropyLoss, softmax over 10 classes). Our original Supplementary "
     "Figure S7 plotted the loss curve of an unrelated, unused exploratory "
     "script that trained a different (binary-classification, "
-    "BCEWithLogitsLoss) model never used to produce any reported result; a "
-    "reviewer detected this from the epoch count and initial-loss value not "
-    "matching a 10-class softmax model, and it is corrected here."
+    "BCEWithLogitsLoss) model never used to produce any reported result, "
+    "evident from the epoch count and initial-loss value not "
+    "matching a 10-class softmax model; it is corrected here."
 )
 
 add_figure(f"{FIG_DIR}\\figure_s7b_resnet_scratch_loss_curves.png")
 caption(
     "Figure 9. Training and validation loss curves for the scratch ResNet-18 "
-    "(single representative run), provided per reviewer request."
+    "(single representative run)."
 )
 
 add_figure(f"{FIG_DIR}\\figure_s7c_resnet_pretrained_loss_curves.png")
@@ -1242,34 +1236,7 @@ caption(
     "quantified batch-separation metrics in Table 8."
 )
 
-doc.add_page_break()
-h1("Supplementary Figures")
-
-add_figure(f"{FIG_DIR}\\figure11_confusion_matrix_lr_12class.png")
-caption(
-    "Supplementary Figure S1. Confusion matrix for Logistic Regression on the "
-    "compound-disjoint test set; the 4 classes with no test-set representation "
-    "(Table 1) appear as all-zero rows, shown explicitly rather than omitted."
-)
-
-add_figure(f"{FIG_DIR}\\figure12_confusion_matrix_rf_12class.png")
-caption(
-    "Supplementary Figure S2. Confusion matrix for Random Forest on the "
-    "compound-disjoint test set; the 4 classes with no test-set representation "
-    "(Table 1) appear as all-zero rows, shown explicitly rather than omitted."
-)
-
-add_figure(f"{FIG_DIR}\\figure13_confusion_matrix_resnet_pretrained_12class.png")
-caption(
-    "Supplementary Figure S3. Confusion matrix for the pretrained ResNet-18 "
-    "on the compound-disjoint test set; the 4 classes with no test-set "
-    "representation (Table 1) appear as all-zero rows, shown explicitly "
-    "rather than omitted."
-)
-
-add_figure(f"{FIG_DIR}\\supplementary_figure_s1_feature_correlation.png")
-caption("Supplementary Figure S4. Spearman correlation matrix across all 42 per-channel morphological features.")
-
 print("Figures section written.")
+print("Supplementary Figures S1-S4 are provided as a separate Supplementary Material file, not embedded here.")
 doc.save(str(Path(__file__).resolve().parent / "BBBC021_Manuscript_REVISED.docx"))
 print("Saved checkpoint 6.")
