@@ -878,9 +878,11 @@ h1("Conflict of Interest")
 body(
     "Authors NK, ShK, and SiK are members of the same family. This relationship "
     "had no influence on the study design, data collection, analysis, or "
-    "interpretation of the results. [AUTHOR NAME] was an editorial board member "
-    "of Frontiers at the time of submission; this had no impact on the peer "
-    "review process and the final decision. The authors otherwise declare that "
+    "interpretation of the results. Narasaiah Kolliputi and Venkata Ramireddy "
+    "Narala were editorial board members (Associate Editors, Respiratory "
+    "Pharmacology, Frontiers in Pharmacology) at the time of submission; this "
+    "had no impact on the peer review process and the final decision. The "
+    "authors otherwise declare that "
     "the research was conducted in the absence of any commercial or financial "
     "relationships that could be construed as a potential conflict of interest."
 )
