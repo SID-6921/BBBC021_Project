@@ -1184,7 +1184,8 @@ add_figure(f"{FIG_DIR}\\figure5_roc_deep_learning_macro.png")
 caption(
     "Figure 5. Macro-averaged ROC curves for the three deep-learning models "
     "(single representative run each), averaged over the 6 test-evaluable "
-    "classes. Legend values match Table 2 exactly."
+    "classes. The pretrained run's macro-AUC (0.959) lies within the "
+    "five-seed range (Table 3)."
 )
 
 add_figure(f"{FIG_DIR}\\figure5b_roc_resnet_pretrained_per_class.png")
