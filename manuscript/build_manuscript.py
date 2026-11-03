@@ -136,7 +136,7 @@ body(
     "and 0.524 respectively, versus 0.210 and 0.207 under channel fusion on the same "
     "split), consistent with channel fusion having discarded MOA-discriminative "
     "signal. Scratch-initialized deep models remain markedly less stable across seeds "
-    "than the pretrained model (an 8-fold larger AUC standard deviation), indicating "
+    "than the pretrained model (a 7-fold larger AUC standard deviation), indicating "
     "that pretraining confers a stability advantage in addition to a mean-performance "
     "advantage under this data regime. We report these results as a computational "
     "benchmarking exercise on the BBBC021 MCF-7 cell dataset; we did not measure "
@@ -273,7 +273,8 @@ body(
     "correspondingly undefined for these four classes and are reported as such "
     "throughout, never silently omitted. The resulting partition contains 468 "
     "training, 28 validation, and 328 test images, spanning all 10 classes in "
-    "training and 6 of 10 classes in validation/test (Table 1). Because every "
+    "training and all 6 evaluable classes in the test set and 3 of 10 classes in "
+    "validation (Table 1). Because every "
     "multi-compound class in this subset has at most 4 distinct compounds, the "
     "20%-of-compounds test allocation rounds to exactly one compound per class in "
     "every case: each of the six evaluable classes is tested against a single "
@@ -410,7 +411,7 @@ body(
     "Feature ablation on the Random Forest model quantified descriptor "
     "redundancy and importance. Because mean_intensity/total_intensity and "
     "spot_count/density_spots_per_10k_px are exact linear rescalings of one another "
-    "within a fixed-size image, a point not acted on in our "
+    "within a fixed-size image, a fact not acted on in our "
     "original submission, we deduplicated the per-channel feature-importance "
     "ranking before ablation: when a feature is selected for removal, its exact "
     "collinear partner (if present in the feature set) is removed together with it, "
@@ -462,8 +463,8 @@ body(
     "(Random Forest: accuracy 0.210, AUC 0.810; Logistic Regression: accuracy 0.207, "
     "AUC 0.794), which we also report here as a direct ablation of the channel-fusion "
     "decision itself, holding the split fixed. This is consistent with channel "
-    "fusion discarding MOA-discriminative signal, and with the "
-    "specific mechanism proposed: the classes most easily confused under channel "
+    "fusion discarding MOA-discriminative signal, through a specific mechanism: "
+    "the classes most easily confused under channel "
     "fusion in our original submission's confusion matrices are exactly the classes "
     "(microtubule destabilizers vs. stabilizers, actin disruptors, DNA-damaging "
     "agents) whose distinguishing signal lives in which channel changes. Macro-"
@@ -477,13 +478,17 @@ h2("3.2 Deep-learning performance under the compound-level split")
 body(
     "Under the compound-level split and per-channel 3-channel input, deep-learning "
     "performance diverged sharply by initialization, as in our original submission, "
-    "though at substantially different absolute levels (Table 2, Figure 5). In a "
+    "though at substantially different absolute levels (Table 2; Figure 5). In a "
     "single representative training run, the compact CNN trained from scratch "
     "reached an accuracy of 0.000 and a macro-OvR AUC of 0.560; we return to this "
-    "result and its interpretation below. The single-run ResNet-18 trained from "
-    "scratch reached an accuracy of 0.494 and an AUC of 0.884; the single-run "
-    "ImageNet-pretrained ResNet-18 reached an accuracy of 0.707 and an AUC of 0.959, "
-    "with the lowest ECE of any deep-learning model (0.154). Per-class curves with "
+    "result and its interpretation below. Because a single run is not a reliable "
+    "summary for either ResNet-18 condition at this sample size, we report both "
+    "conditions as five-seed distributions (next paragraph; Tables 2, 3) rather "
+    "than as any single hand-picked run; the pretrained ResNet-18 had the lowest "
+    "ECE of any deep-learning model (0.154). For the paired-bootstrap comparison "
+    "(Section 3.3), which requires one fixed set of per-image predictions, we use "
+    "a representative pretrained run whose macro-AUC (0.959) falls within the "
+    "five-seed range (0.957-0.974). Per-class curves with "
     "the macro-average overlaid for the pretrained ResNet-18 are shown in Figure 6; "
     "its confusion matrix is provided in Supplementary Figure S3."
 )
@@ -516,8 +521,8 @@ body(
     "onto one or two of the training-set's largest classes; in every degenerate case "
     "we examined, the collapsed-onto classes were among the four classes with no "
     "test-set representation (Section 2.1), or, for the one clearly non-degenerate "
-    "seed (seed 999 under the original fused-feature setup), spread across classes "
-    "that are genuinely present in the test set. "
+    "seed (one scratch-ResNet seed whose predictions did not collapse), spread "
+    "across classes that are genuinely present in the test set. "
     "Because these four classes are large in training (up to 160 images) precisely "
     "because they are single-compound classes concentrated in training by "
     "construction, a model that has not learned features generalizing to a new "
@@ -547,6 +552,7 @@ h2("3.3 Statistical comparison")
 body(
     "Using the primary paired-bootstrap test on macro-AUC difference (Section 2.4, "
     "single representative run per model, 2,000 resamples), the pretrained ResNet-18 "
+    "(representative run, macro-AUC 0.959, within the five-seed range) "
     "significantly exceeded Random Forest (\u0394AUC=0.055, 95% CI [0.033, 0.078], "
     "p<0.001), and Random Forest significantly exceeded the compact CNN "
     "(\u0394AUC=-0.345, 95% CI [-0.374, -0.314], p<0.001). The secondary DeLong-based "
@@ -561,8 +567,8 @@ body(
 h2("3.4 Calibration")
 body(
     "Expected Calibration Error was lowest for the pretrained ResNet-18 (0.154), "
-    "followed by Random Forest (0.170), Logistic Regression (0.266), the compact CNN "
-    "(0.466), and the scratch ResNet-18 (0.379) (Table 5, Figure 11). All models are "
+    "followed by Random Forest (0.170), Logistic Regression (0.266), the scratch "
+    "ResNet-18 (0.379), and the compact CNN (0.466) (Table 5, Figure 11). All models are "
     "less well calibrated on the compound-level split than the corresponding models "
     "were on the (leakage-affected) image-level split reported in our original "
     "submission; we believe this reflects genuine task difficulty under a properly "
@@ -722,7 +728,7 @@ body(
 body(
     "That said, which features plausibly link to which "
     "biology is worth answering explicitly, with the same hedging. The top-ablation "
-    "DAPI-channel features (Table 6: spot area, spot count, spot density) track "
+    "DAPI-channel features (Table 7: spot area, spot count, spot density) track "
     "nuclear fragmentation and chromatin condensation, a downstream morphological "
     "readout shared by several stress pathways, oxidative stress among them but not "
     "specific to it; the same features also respond to DNA-damaging agents and "
@@ -802,26 +808,6 @@ body(
     "that the model has learned a compound-invariant representation of each MOA. "
     "Establishing that would need more compounds per MOA class than the present "
     "16-archive-file subset of BBBC021 provides (Section 4.4)."
-)
-body("Table 10. Leave-one-compound-out cross-validation, Random Forest and Logistic Regression, per MOA class.")
-table_from_rows(
-    ["MOA class", "Compounds tested", "RF accuracy (mean, range)", "LR accuracy (mean, range)"],
-    [
-        ["Actin disruptors", "3", "0.556 (0.292-1.000)", "0.500 (0.417-0.583)"],
-        ["Aurora kinase inhibitors", "2", "0.812 (0.708-0.917)", "0.680 (0.583-0.778)"],
-        ["DNA damage", "3", "0.370 (0.000-1.000)", "0.407 (0.222-0.750)"],
-        ["Microtubule destabilizers", "4", "0.214 (0.000-0.750)", "0.254 (0.000-0.812)"],
-        ["Microtubule stabilizers", "2", "0.497 (0.355-0.639)", "0.670 (0.589-0.750)"],
-        ["Protein degradation", "2", "0.042 (0.000-0.083)", "0.375 (0.333-0.417)"],
-    ],
-)
-caption(
-    "Table 10. Each row holds out every compound in that class in turn, training "
-    "on all remaining images (all other classes included in full) and testing on "
-    "the held-out compound alone; range is across that class's compounds. This "
-    "differs from Table 2's single compound-level split and is intended to show "
-    "compound-to-compound variance in generalization, not to replace Table 2's "
-    "headline comparison across models."
 )
 
 # =====================================================================
@@ -986,23 +972,24 @@ caption(
     "val=28, test=328)."
 )
 
-body("Table 2. Overall model performance on the held-out, compound-disjoint test set (single representative run; n=328).")
+body("Table 2. Overall model performance on the held-out, compound-disjoint test set (n=328; ResNet-18 rows are five-seed mean ± SD, see Table 3).")
 table_from_rows(
-    ["Model", "Accuracy (95% CI)", "Macro-OvR AUC (95% CI)", "ECE"],
+    ["Model", "Accuracy", "Macro-OvR AUC", "ECE"],
     [
         ["Logistic Regression", "0.524 (0.476, 0.579)", "0.866 (0.837, 0.894)", "0.266"],
         ["Random Forest", "0.399 (0.354, 0.451)", "0.904 (0.884, 0.923)", "0.170"],
         ["CNN (scratch)", "0.000 (0.000, 0.000)", "0.560 (0.537, 0.585)", "0.466"],
-        ["ResNet-18 (scratch, single run)", "0.494 (0.445, 0.549)", "0.884 (0.859, 0.906)", "0.379"],
-        ["ResNet-18 (pretrained, single run)", "0.707 (0.649, 0.759)", "0.959 (0.943, 0.971)", "0.154"],
+        ["ResNet-18 (scratch, five-seed mean ± SD)", "0.261 ± 0.076", "0.826 ± 0.048", "0.379"],
+        ["ResNet-18 (pretrained, five-seed mean ± SD)", "0.721 ± 0.042", "0.965 ± 0.007", "0.154"],
     ],
 )
 caption(
     "Table 2. Macro-OvR AUC is averaged over the 6 classes with test-set "
     "representation (Table 1); LR/RF are trained on 42 per-channel morphological "
-    "descriptors. ResNet-18 rows show a single representative run; see Table 3 for "
-    "the five-seed distribution used as the primary reported result for both "
-    "ResNet-18 conditions."
+    "descriptors. ResNet-18 rows report the five-seed mean ± SD (seeds 1, 7, 42, "
+    "123, 999; see Table 3); Logistic Regression, Random Forest, and CNN are single "
+    "representative runs with 95% bootstrap CIs. ECE values are the "
+    "representative-run calibration (also in Table 5)."
 )
 
 body("Table 3. ResNet-18 performance across five random seeds (primary reported result for both conditions).")
@@ -1116,6 +1103,27 @@ table_from_rows(
     ],
 )
 caption("Table 9. All training was performed on CPU only; times should not be extrapolated to GPU-accelerated settings.")
+
+body("Table 10. Leave-one-compound-out cross-validation, Random Forest and Logistic Regression, per MOA class.")
+table_from_rows(
+    ["MOA class", "Compounds tested", "RF accuracy (mean, range)", "LR accuracy (mean, range)"],
+    [
+        ["Actin disruptors", "3", "0.556 (0.292-1.000)", "0.500 (0.417-0.583)"],
+        ["Aurora kinase inhibitors", "2", "0.812 (0.708-0.917)", "0.680 (0.583-0.778)"],
+        ["DNA damage", "3", "0.370 (0.000-1.000)", "0.407 (0.222-0.750)"],
+        ["Microtubule destabilizers", "4", "0.214 (0.000-0.750)", "0.254 (0.000-0.812)"],
+        ["Microtubule stabilizers", "2", "0.497 (0.355-0.639)", "0.670 (0.589-0.750)"],
+        ["Protein degradation", "2", "0.042 (0.000-0.083)", "0.375 (0.333-0.417)"],
+    ],
+)
+caption(
+    "Table 10. Each row holds out every compound in that class in turn, training "
+    "on all remaining images (all other classes included in full) and testing on "
+    "the held-out compound alone; range is across that class's compounds. This "
+    "differs from Table 2's single compound-level split and is intended to show "
+    "compound-to-compound variance in generalization, not to replace Table 2's "
+    "headline comparison across models."
+)
 
 print("Tables written.")
 
