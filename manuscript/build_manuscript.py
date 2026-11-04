@@ -540,8 +540,7 @@ body(
 )
 body(
     "The single-run compact CNN result (accuracy 0.000) was not re-run across "
-    "multiple seeds here, given the time constraints of the review "
-    "period; we flag this explicitly as an item for future work rather "
+    "multiple seeds here; we flag this explicitly as an item for future work rather "
     "than presenting the single run as more representative than it is. Given the "
     "seed-sensitivity documented above for the architecturally similar ResNet-18-"
     "scratch condition, we expect the CNN's single-run result to be similarly "
@@ -816,8 +815,8 @@ body(
 h1("5. Conclusion")
 body(
     "We present a leakage-controlled benchmark for mechanism-of-action "
-    "classification on BBBC021 that addresses two methodological issues identified "
-    "in peer review of our original submission: image-level (rather than "
+    "classification on BBBC021 that addresses two common methodological issues in "
+    "high-content-screening pipelines: image-level (rather than "
     "compound-level) train/test splitting, and channel-fused (rather than "
     "per-channel) feature extraction and deep-learning input. Under the corrected "
     "evaluation, an ImageNet-pretrained ResNet-18 with staged fine-tuning remains "
@@ -1151,8 +1150,7 @@ add_figure(f"{FIG_DIR}\\Figure_1.png")
 caption(
     "Figure 1. Overall analysis pipeline workflow, from raw multi-channel "
     "microscopy images through per-channel feature extraction and model "
-    "training/evaluation on the compound-disjoint split (detection logic "
-    "unchanged from our original submission)."
+    "training/evaluation on the compound-disjoint split."
 )
 
 add_figure(f"{FIG_DIR}\\Figure_2.png")
@@ -1167,9 +1165,7 @@ add_figure(f"{FIG_DIR}\\figure3_roc_feature_based_macro.png")
 caption(
     "Figure 3. Macro-averaged ROC curves for Logistic Regression and Random "
     "Forest, averaged over the 6 test-evaluable classes, on the held-out "
-    "compound-disjoint test set. Legend values match Table 2 exactly, correcting "
-    "our original submission, in which the plotted curve did not correspond to "
-    "the macro-OvR quantity reported in the tables."
+    "compound-disjoint test set. Legend values match Table 2 exactly."
 )
 
 add_figure(f"{FIG_DIR}\\figure3b_roc_random_forest_per_class.png")
@@ -1203,14 +1199,9 @@ caption(
 
 add_figure(f"{FIG_DIR}\\figure_s7_cnn_loss_curves.png")
 caption(
-    "Figure 8. Training and validation loss for the compact CNN, now generated "
+    "Figure 8. Training and validation loss for the compact CNN, generated "
     "directly from the model whose results appear in Tables 2 and 5 "
-    "(CrossEntropyLoss, softmax over 10 classes). Our original Supplementary "
-    "Figure S7 plotted the loss curve of an unrelated, unused exploratory "
-    "script that trained a different (binary-classification, "
-    "BCEWithLogitsLoss) model never used to produce any reported result, "
-    "evident from the epoch count and initial-loss value not "
-    "matching a 10-class softmax model; it is corrected here."
+    "(CrossEntropyLoss, softmax over 10 classes)."
 )
 
 add_figure(f"{FIG_DIR}\\figure_s7b_resnet_scratch_loss_curves.png")
@@ -1243,8 +1234,7 @@ add_figure(f"{FIG_DIR}\\figure16_pca_batch_after.png")
 caption(
     "Figure 14. PCA of the 42-feature vectors after within-batch z-score "
     "normalization, with %-variance-explained axis labels and a sorted batch "
-    "legend (both missing in our original submission), and corresponding "
-    "quantified batch-separation metrics in Table 8."
+    "legend, and corresponding quantified batch-separation metrics in Table 8."
 )
 
 print("Figures section written.")
