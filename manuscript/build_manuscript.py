@@ -115,7 +115,7 @@ body(
     "performance, particularly for pixel-based deep learning models; and (ii) fusing "
     "multi-channel fluorescence images into a single grayscale representation before "
     "feature extraction, which can discard exactly the channel-specific information "
-    "that distinguishes mechanistic classes. We present a revised, leakage-controlled "
+    "that distinguishes mechanistic classes. We present a leakage-controlled "
     "benchmark for the BBBC021 dataset (824 images, 10 mechanism-of-action classes) "
     "that addresses both issues directly: a compound-level grouped train/validation/test "
     "split (no compound's images appear in more than one partition), and per-channel "
@@ -143,7 +143,7 @@ body(
     "reactive oxygen species or oxidative stress directly, and any relevance of specific "
     "MOA classes to redox pharmacology or pulmonary disease is noted as a motivating "
     "rationale for future targeted validation, not a demonstrated finding of this study. "
-    "The revised pipeline, including the compound-level split, per-channel feature "
+    "The pipeline, including the compound-level split, per-channel feature "
     "extraction, multi-seed training, and bootstrap-based statistical comparison, is "
     "publicly available."
 )
@@ -199,7 +199,7 @@ body(
     "both recorded and can both be controlled for directly."
 )
 body(
-    "We revise our original analysis of this dataset to address both issues, and "
+    "We address both issues in our analysis of this dataset, and "
     "report the consequences transparently rather than only the corrected headline "
     "numbers. Specifically, we (i) replace the image-level split with a compound-level "
     "grouped split, in which every image from a given compound is assigned entirely "
@@ -221,7 +221,7 @@ body(
     "targeted validation work; it is not evidence produced by the present study."
 )
 body(
-    "The revised, leakage-controlled pipeline -- covering data curation, per-channel "
+    "The leakage-controlled pipeline -- covering data curation, per-channel "
     "feature extraction, model training, and statistical validation -- is summarized "
     "in Figure 1, and is publicly available at "
     "https://github.com/SID-6921/BBBC021_Project."
@@ -291,7 +291,7 @@ body(
     "data: sibling fields from the same well, and images from the same compound, "
     "could appear in both training and test under that split, which a pixel-based "
     "pretrained network is particularly well positioned to exploit. All results in "
-    "this revision use the compound-level split described above."
+    "this manuscript use the compound-level split described above."
 )
 
 h2("2.2 Preprocessing, detection, and per-channel feature engineering")
@@ -307,7 +307,7 @@ body(
     "a specific marker."
 )
 body(
-    "We revised the pipeline to process each of the three channels independently. "
+    "We changed the pipeline to process each of the three channels independently. "
     "For each channel, bright-region detection used adaptive Gaussian thresholding "
     "followed by morphological opening and closing to suppress noise and consolidate "
     "objects, consistent with established CellProfiler-based preprocessing "
@@ -354,8 +354,8 @@ body(
     "training budget of 16 epochs. In our original submission, the randomly "
     "initialized ResNet-18 was trained for only 10 epochs at 1\u00d710\u207b\u00b3 with no second "
     "stage -- a training-budget asymmetry that confounds the scratch-vs-pretrained "
-    "comparison, independent of pretraining itself. In "
-    "this revision, the scratch ResNet-18 is trained for the same total budget of 16 "
+    "comparison, independent of pretraining itself. Here, the scratch ResNet-18 is "
+    "trained for the same total budget of 16 "
     "epochs at 1\u00d710\u207b\u00b3 (all layers trainable throughout, since there is no pretrained "
     "representation to protect behind a frozen stage), so that the comparison "
     "isolates the effect of pretraining rather than the effect of additional "
@@ -368,8 +368,8 @@ body(
     "across five predefined random seeds (1, 7, 42, 123, 999), holding the "
     "compound-level data split fixed across seeds so that seed variance reflects "
     "model initialization and stochastic training dynamics rather than which "
-    "compounds were sampled into which partition. All headline ResNet-18 results in "
-    "this revision are reported as mean \u00b1 SD (and range) across these five seeds, "
+    "compounds were sampled into which partition. All headline ResNet-18 results "
+    "here are reported as mean \u00b1 SD (and range) across these five seeds, "
     "not as a single training run, since single-run deep-learning results at this "
     "sample size are not sufficient evidence of typical model behavior."
 )
@@ -391,14 +391,14 @@ body(
     "times, macro-AUC is recomputed for both models on each resample with the model "
     "pairing preserved, and we report the resulting 95% percentile confidence "
     "interval and a two-sided bootstrap p-value. This replaces the DeLong test as "
-    "the primary comparison in this revision. The classical "
+    "the primary comparison here. The classical "
     "DeLong procedure (DeLong et al., 1988) is derived for comparing a single pair "
     "of correlated binary ROC curves; extending it to a macro-averaged, "
     "class-imbalanced, 10-class one-versus-rest quantity -- as our original "
     "submission did, by averaging per-class DeLong covariance terms under an "
     "independence assumption across classes -- is not something the classical "
-    "derivation warrants. We retain the original DeLong-based comparison in this "
-    "revision only as a secondary, clearly labeled cross-check (reported alongside "
+    "derivation warrants. We retain the original DeLong-based comparison only as a "
+    "secondary, clearly labeled cross-check (reported alongside "
     "the primary bootstrap result in Section 3.3); both "
     "methods agree in direction and significance for every comparison reported "
     "here. We note that the bootstrap procedure resamples test images and does not "
@@ -421,8 +421,8 @@ body(
 )
 body(
     "Biological validation of the top morphological features used Kruskal-Wallis "
-    "tests for class-stratification, as in our original submission. The "
-    "concentration-response analysis is revised: rather than a single Spearman "
+    "tests for class-stratification, as in our original submission. For the "
+    "concentration-response analysis, rather than a single Spearman "
     "correlation between a feature and concentration pooled across all compounds "
     "(which conflates a given concentration of a potent compound with the same "
     "nominal concentration of a weak one), we compute "
@@ -540,8 +540,8 @@ body(
 )
 body(
     "The single-run compact CNN result (accuracy 0.000) was not re-run across "
-    "multiple seeds in this revision, given the time constraints of the review "
-    "period; we flag this explicitly as an item for a future revision cycle rather "
+    "multiple seeds here, given the time constraints of the review "
+    "period; we flag this explicitly as an item for future work rather "
     "than presenting the single run as more representative than it is. Given the "
     "seed-sensitivity documented above for the architecturally similar ResNet-18-"
     "scratch condition, we expect the CNN's single-run result to be similarly "
@@ -572,7 +572,7 @@ body(
     "less well calibrated on the compound-level split than the corresponding models "
     "were on the (leakage-affected) image-level split reported in our original "
     "submission; we believe this reflects genuine task difficulty under a properly "
-    "disjoint test set rather than a regression introduced by this revision, since "
+    "disjoint test set rather than a newly introduced regression, since "
     "the same pattern (higher ECE under compound-level evaluation) is present across "
     "every model, including Logistic Regression and Random Forest, whose training "
     "procedure did not change between analyses."
@@ -628,7 +628,7 @@ body(
 h2("3.6 Computational cost")
 body(
     "All experiments were run on a single CPU-only workstation (no GPU acceleration "
-    "was used or available for this revision); we report this explicitly to correct "
+    "was used or available); we report this explicitly to correct "
     "our original submission, which gave training times and peak memory without any "
     "hardware specification. Logistic Regression and Random Forest trained in "
     "well under 2 seconds. The compact CNN (6 epochs) trained in under a minute. "
@@ -680,8 +680,8 @@ body(
     "run (0.668) as the headline result in every table and figure. This placement, "
     "reporting the apparent worst run in "
     "the tables while disclosing the true range only as a limitation in the "
-    "Discussion, reads as selective reporting even when unintentional. In this "
-    "revision, both ResNet-18 conditions are reported as five-seed distributions "
+    "Discussion, reads as selective reporting even when unintentional. Both "
+    "ResNet-18 conditions are reported as five-seed distributions "
     "everywhere they appear (Tables 2, 3, 9, Figures 5-6), and the corresponding "
     "statistical comparison (Section 3.3) is computed on that basis. The scratch "
     "model's seed-to-seed AUC standard deviation (0.048) is roughly 7-fold larger "
@@ -714,7 +714,7 @@ body(
     "evidence from this study."
 )
 body(
-    "We have revised the title, Abstract, Introduction, and Conclusion accordingly: "
+    "We have updated the title, Abstract, Introduction, and Conclusion accordingly: "
     "this manuscript is presented as a computational benchmarking and methodology "
     "study on the BBBC021 MOA classification task, addressing train/test leakage, "
     "channel-fusion information loss, and statistically defensible model comparison "
@@ -754,7 +754,7 @@ body(
     "including from the full BBBC021 archive beyond the 16 files retrieved here, "
     "would allow these four classes to be included in a genuinely compound-disjoint "
     "evaluation. Second, the compact CNN's single-run result was not re-evaluated "
-    "across multiple seeds in this revision cycle (Section 3.2); given the "
+    "across multiple seeds (Section 3.2); given the "
     "documented seed-sensitivity of the architecturally similar scratch ResNet-18, "
     "we do not treat the single CNN run as representative and flag multi-seed CNN "
     "evaluation as an immediate next step. Third, the paired bootstrap statistical "
@@ -815,7 +815,7 @@ body(
 # =====================================================================
 h1("5. Conclusion")
 body(
-    "We present a revised, leakage-controlled benchmark for mechanism-of-action "
+    "We present a leakage-controlled benchmark for mechanism-of-action "
     "classification on BBBC021 that addresses two methodological issues identified "
     "in peer review of our original submission: image-level (rather than "
     "compound-level) train/test splitting, and channel-fused (rather than "
@@ -834,7 +834,7 @@ body(
     "high-content screening pipeline design; we do not claim, and this study does "
     "not demonstrate, direct relevance to oxidative stress or pulmonary disease, "
     "which we identify as a motivated but untested direction for future work. The "
-    "revised pipeline -- including the compound-level split, per-channel feature "
+    "pipeline -- including the compound-level split, per-channel feature "
     "extraction, matched-budget and multi-seed model training, deduplicated feature "
     "ablation, within-compound dose-response analysis, quantified batch-effect "
     "correction, and bootstrap-based statistical comparison -- is publicly "
@@ -850,7 +850,7 @@ h1("Data Availability Statement")
 body(
     "The datasets analyzed in this study are publicly available. The BBBC021 image "
     "set was obtained from the Broad Bioimage Benchmark Collection. All source "
-    "code, including the revised compound-level split, per-channel feature "
+    "code, including the compound-level split, per-channel feature "
     "extraction, multi-seed training scripts, and bootstrap statistical tests, "
     "along with generated figures, tables, and result summaries, are openly "
     "available at https://github.com/SID-6921/BBBC021_Project."
@@ -865,10 +865,10 @@ body(
 h1("Author Contributions")
 body(
     "SN: conceptualization, methodology, software, validation, formal analysis, "
-    "visualization, and writing of the original draft and this revision. ShK, SiK, "
+    "visualization, and writing of the original draft and this manuscript. ShK, SiK, "
     "and VRN: writing, review, and editing. NK and VRN: critical revision of the "
     "manuscript. NK: supervision. All authors read and approved the final version "
-    "of this revised manuscript."
+    "of this manuscript."
 )
 h1("Funding")
 body("This research received no external funding.")
@@ -1018,7 +1018,7 @@ table_from_rows(
 )
 caption(
     "Table 4. Paired bootstrap (2,000 resamples of the n=328 test set, model "
-    "pairing preserved per resample) is the primary comparison in this revision; "
+    "pairing preserved per resample) is the primary comparison here; "
     "DeLong is retained only as a secondary cross-check given known validity "
     "concerns for macro-averaged multiclass AUC (Section 2.4). Both methods agree "
     "in direction and significance for both comparisons reported."
